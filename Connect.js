@@ -92,6 +92,16 @@ function haiku (target, context) {
     })
 }
 
+function flipCoin(target, context){
+    var coin = Math.floor(Math.random() * 2); 
+
+    //print coin;
+	if (coin == 0)
+		sendMessage('The coin landed on Tails');
+	else if (coin == 1)
+		sendMessage('The coin landed on Heads');
+}
+
 // Helper function to send the correct type of message:
 function sendMessage (target, context, message) {
     if (context['message-type'] === 'whisper') {
