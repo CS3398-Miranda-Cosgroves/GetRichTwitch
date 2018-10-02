@@ -92,7 +92,7 @@ function haiku (target, context) {
     })
 }
 
-function flipCoin(target, context){
+function coinFlip(target, context){
     var coin = Math.floor(Math.random() * 2); 
 
     //print coin;
