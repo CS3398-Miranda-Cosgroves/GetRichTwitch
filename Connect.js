@@ -1,5 +1,6 @@
 const tmi = require('tmi.js');
 const haikudos = require('haikudos');
+const commands = require('Commands');
 
 // Valid commands start with:
 let commandPrefix = '!';
@@ -49,7 +50,7 @@ function onMessageHandler (target, context, msg, self) {
         // Retrieve the function by its name:
         const command = knownCommands[commandName]
         // Then call the command with parameters:
-        command(target, context, params)
+        commands.command(target, context, params)
         console.log(`* Executed ${commandName} command for ${context.username}`)
     } else {
         console.log(`* Unknown command ${commandName} from ${context.username}`)
@@ -65,55 +66,6 @@ function onConnectedHandler (addr, port) {
 function onDisconnectedHandler (reason) {
     console.log(`Disconnected: ${reason}`)
     process.exit(1)
-}
-
-// Function called when the "echo" command is issued:
-function echo (target, context, params) {
-    // If there's something to echo:
-    if (params.length) {
-        // Join the params into a string:
-        const msg = params.join(' ')
-        // Send it back to the correct place:
-        sendMessage(target, context, msg)
-    } else { // Nothing to echo
-        console.log(`* Nothing to echo`)
-    }
-}
-
-// Function called when the "haiku" command is issued:
-function haiku (target, context) {
-    // Generate a new haiku:
-    haikudos((newHaiku) => {
-        // Split it line-by-line:
-        newHaiku.split('\n').forEach((h) => {
-            // Send each line separately:
-            sendMessage(target, context, h)
-        })
-    })
-}
-
-// Function called when the "gamble" command is issued:
-function gamble(target, context, params) {
-    var coin = Math.floor(Math.random() * 2);
-
-    //takes in bet input
-    if (params.length)
-        var msg = params.join(' ');
-
-    if (coin == 0)
-        coin = 'tails';
-    else
-        coin = 'heads';
-
-    // Prints gamble messages;
-    if (coin == 'tails' && coin == msg)
-        sendMessage(target, context, 'You bet on Tails and you won the bet (somehow). You won 50 coins');
-    else if (coin == 'heads' && coin == msg)
-        sendMessage(target, context, 'You bet on Heads and you won the bet (somehow). You won 50 coins');
-    else if (coin == 'tails' && !(coin == msg))
-        sendMessage(target, context, 'You bet on Heads and you lost the bet. You lost 100 coins..boohoo');
-    else if (coin == 'heads' && !(coin == msg))
-        sendMessage(target, context, 'You bet on Tails and you lost the bet. You lost 100 coins..boohoo');
 }
 
 // Helper function to send the correct type of message:
