@@ -15,7 +15,7 @@ let opts = {
 }
 
 // These are the commands the bot knows (defined below):
-let knownCommands = { echo, haiku, coinFlip, gamble} //add new commands to this list
+let knownCommands = { echo, haiku, coinflip, gamble, slap} //add new commands to this list
 // Create a client with our options:
 let client = new tmi.client(opts)
 
@@ -90,17 +90,6 @@ function haiku (target, context) {
             sendMessage(target, context, h)
         })
     })
-}
-
-// Function called when the "coinFlip" command is issued:
-function coinFlip(target, context) {
-    var coin = Math.floor(Math.random() * 2);
-
-    // Print coin;
-    if (coin == 0)
-        sendMessage(target, context, 'The coin landed on Tails');
-    else if (coin == 1)
-        sendMessage(target, context, 'The coin landed on Heads');
 }
 
 // Function called when the "gamble" command is issued:
