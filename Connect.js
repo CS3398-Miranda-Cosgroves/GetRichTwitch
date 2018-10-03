@@ -15,7 +15,7 @@ let opts = {
 }
 
 // These are the commands the bot knows (defined below):
-let knownCommands = { echo, haiku, coinflip, gamble, slap} //add new commands to this list
+let knownCommands = { echo, haiku, coinflip, gamble, slap, doom, givepts } //add new commands to this list
 // Create a client with our options:
 let client = new tmi.client(opts)
 
@@ -30,7 +30,7 @@ client.connect()
 // Called every time a message comes in:
 function onMessageHandler (target, context, msg, self) {
     if (self) { return } // Ignore messages from the bot
-
+    console.log("message type: " + context['message-type']);
     // This isn't a command since it has no prefix:
     if (msg.substr(0, 1) !== commandPrefix) {
         console.log(`[${target} (${context['message-type']})] ${context.username}: ${msg}`)
@@ -116,10 +116,29 @@ function gamble(target, context, params) {
         sendMessage(target, context, 'You bet on Tails and you lost the bet. You lost 100 coins..boohoo');
 }
 
+//Function called when the "doom" command is issued:
+function doom(target, context, params) {
+    var thing = (context);
+
+    if(params.length)
+        var msg = params.join(' ');
+    
+    //Prints return message
+    sendMessage(target, context, 'Yes, Doom will run on anything, even on a ' + msg );
+}
+
+//Function called when "givepts" command is issued:
+function givepts(target, context) {
+    var pts = Math.floor((Math.random()+1 ) * 10);
+    sendMessage(target, context, context.username + ' got ' + pts + ' points. YAY!');
+    //sendMessage(target, context, user.username );
+}
+
 // Helper function to send the correct type of message:
-function sendMessage (target, context, message) {
+//Know that Commands do not run in Whisper
+function sendMessage (target, context, message) { 
     if (context['message-type'] === 'whisper') {
-        client.whisper(target, message)
+       client.whisper(target, message)
     } else {
         client.say(target, message)
     }
