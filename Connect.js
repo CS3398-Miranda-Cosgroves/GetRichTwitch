@@ -5,17 +5,17 @@ const haikudos = require('haikudos');
 let commandPrefix = '!';
 // Define configuration options:
 let opts = {
-        identity: {
-            username: 'MirandaCosgroveBot',
-    password: 'oauth:' + 'l8ec68snfdwehzsug2ekcoaza7hvkn'
-},
-channels: [
-'MirandaCosgroveBot'
-]
+    identity: {
+        username: 'MirandaCosgroveBot',
+        password: 'oauth:' + 'l8ec68snfdwehzsug2ekcoaza7hvkn'
+    },
+    channels: [
+        'MirandaCosgroveBot'
+    ]
 }
 
 // These are the commands the bot knows (defined below):
-let knownCommands = { echo, haiku }
+let knownCommands = { echo, haiku, coinFlip}
 // Create a client with our options:
 let client = new tmi.client(opts)
 
@@ -92,14 +92,14 @@ function haiku (target, context) {
     })
 }
 
-function coinFlip(target, context){
-    var coin = Math.floor(Math.random() * 2); 
+function coinFlip(target, context) {
+    var coin = Math.floor(Math.random() * 2);
 
     //print coin;
-	if (coin == 0)
-		sendMessage('The coin landed on Tails');
-	else if (coin == 1)
-		sendMessage('The coin landed on Heads');
+    if (coin == 0)
+        sendMessage(target, context, 'The coin landed on Tails');
+    else if (coin == 1)
+        sendMessage(target, context, 'The coin landed on Heads');
 }
 
 // Helper function to send the correct type of message:
