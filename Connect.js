@@ -15,7 +15,7 @@ let opts = {
 }
 
 // These are the commands the bot knows (defined below):
-let knownCommands = { echo, haiku, coinFlip}
+let knownCommands = { echo, haiku, coinFlip, gamble} //add new commands to this list
 // Create a client with our options:
 let client = new tmi.client(opts)
 
@@ -92,14 +92,39 @@ function haiku (target, context) {
     })
 }
 
+// Function called when the "coinFlip" command is issued:
 function coinFlip(target, context) {
     var coin = Math.floor(Math.random() * 2);
 
-    //print coin;
+    // Print coin;
     if (coin == 0)
         sendMessage(target, context, 'The coin landed on Tails');
     else if (coin == 1)
         sendMessage(target, context, 'The coin landed on Heads');
+}
+
+// Function called when the "gamble" command is issued:
+function gamble(target, context, params) {
+    var coin = Math.floor(Math.random() * 2);
+
+    //takes in bet input
+    if (params.length)
+        var msg = params.join(' ');
+
+    if (coin == 0)
+        coin = 'tails';
+    else
+        coin = 'heads';
+
+    // Prints gamble messages;
+    if (coin == 'tails' && coin == msg)
+        sendMessage(target, context, 'You bet on Tails and you won the bet (somehow). You won 50 coins');
+    else if (coin == 'heads' && coin == msg)
+        sendMessage(target, context, 'You bet on Heads and you won the bet (somehow). You won 50 coins');
+    else if (coin == 'tails' && !(coin == msg))
+        sendMessage(target, context, 'You bet on Heads and you lost the bet. You lost 100 coins..boohoo');
+    else if (coin == 'heads' && !(coin == msg))
+        sendMessage(target, context, 'You bet on Tails and you lost the bet. You lost 100 coins..boohoo');
 }
 
 // Helper function to send the correct type of message:
