@@ -7,6 +7,8 @@ for trigger strings to drive input and responses to control things such as games
 project aims to use image processing and machine learning to track donations and subscribers of users on twitch to estimate their 
 income over different time frames, as well as to estimate the potential and mean values for incomes streams of different times and games played.
 
+Currently the code can be built and runs without errors.
+
 
 -Michael Griffith
 -Cody Jandt
