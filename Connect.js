@@ -2,7 +2,7 @@ const tmi = require('tmi.js');
 const haikudos = require('haikudos');
 
 //channel variables
-var currUsers = [ 'MirandaCosgroveBot' ];
+var currUsers = [ 'mirandacosgrovebot' ];
 
 // Valid commands start with:
 let commandPrefix = '!';
@@ -137,11 +137,21 @@ function coinflip(target, context) {
 // Function called when the "slap" command is issued:
 // Function created by lts25
 function slap(target, context, slapee) {
-	var inChat = 1;
+	var inChat = 0;
 	var i;
 	
-	currUsers.push(context.username);
-	//console.log(currUsers);
+	for (i = 0; i < currUsers.length; i++){
+		if (currUsers[i] == context.username) {
+			inChat = 1;
+			break;
+		}
+	}
+	if (!inChat){
+		currUsers.push(context.username);
+	}
+	
+	console.log(currUsers);
+	
 	
 	if (slapee != "") {
 		inChat = 0
@@ -152,10 +162,10 @@ function slap(target, context, slapee) {
 			}
 		}
 		if (inChat){
-		client.say(target, "@" + slapee + ", YOU HAVE BEEN SLAPPED!");
+			sendMessage(target, "@" + slapee + ", YOU HAVE BEEN SLAPPED!");
 		}
 		else {
-			client.say(target, "user not in slapable.");
+			sendMessage(target, "user not slapable.");
 		}
 	}
 	else {
@@ -163,7 +173,7 @@ function slap(target, context, slapee) {
 		var person = Math.floor(Math.random() * numPersons);
 	
 		var slapee = currUsers[person];
-		client.say(target, "@" + slapee + ", YOU HAVE BEEN SLAPPED!");
+		sendMessage(target, "@" + slapee + ", YOU HAVE BEEN SLAPPED!");
 	}
 	
 }
