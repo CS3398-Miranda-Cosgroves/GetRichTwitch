@@ -15,3 +15,17 @@ Currently the code can be built and runs without errors.
 -Eric Ross
 -Levi Stalsworth
 -Joel Martinez 
+
+***********************************************************************************************************************************
+                                                 RUNNING GETRICHTWITCH
+
+***********************************************************************************************************************************
+1. Install Node.js here https://nodejs.org/en/
+2. Once installed run Node.js commmand prompt
+3. Create folder on desktop (for easy access)
+4. Navigate to new folder directory in the Node.js command prompt
+5. Move connect.js into this new folder
+6. Type npm i tmi.js haikudos  //this will install the js files needed to run GetRichtwitch
+7. Run connect.js by typing node connect.js
+8. Open a browser and go to https://www.twitch.tv/mirandacosgrovebot
+9. Type !commands in the chat box to see list of available commands.
