@@ -92,24 +92,6 @@ function haiku (target, context) {
     })
 }
 
-//Function called when the "doom" command is issued:
-function doom(target, context, params) {
-    var thing = (context);
-
-    if(params.length)
-        var msg = params.join(' ');
-    
-    //Prints return message
-    sendMessage(target, context, 'Yes, Doom will run on anything, even on a ' + msg );
-}
-
-//Function called when "givepts" command is issued:
-function givepts(target, context) {
-    var pts = Math.floor((Math.random()+1 ) * 10);
-    sendMessage(target, context, context.username + ' got ' + pts + ' points. YAY!');
-    //sendMessage(target, context, user.username );
-}
-
 // Helper function to send the correct type of message:
 //Know that Commands do not run in Whisper
 function sendMessage (target, context, message) { 
