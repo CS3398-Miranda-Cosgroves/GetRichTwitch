@@ -18,7 +18,7 @@ let opts = {
 }
 
 // These are the commands the bot knows (defined below):
-let knownCommands = { echo, haiku, doom, givepts, slap, coinflip } //add new commands to this list
+let knownCommands = { echo, haiku, doom, givepts, slap, coinflip, gamble } //add new commands to this list
 // Create a client with our options:
 let client = new tmi.client(opts)
 
@@ -98,7 +98,7 @@ function haiku (target, context) {
 }
 	
 // Function called when the "gamble" command is issued:
-// Function created by
+// Function created by 
 function gamble(target, context, params) {
 	var coin = Math.floor(Math.random() * 2);
 
@@ -140,13 +140,13 @@ function slap(target, context, slapee) {
 	var inChat = 1;
 	var i;
 	
-	currSlapers.push(context.username);
-	console.log(currSlapers);
+	currUsers.push(context.username);
+	//console.log(currUsers);
 	
 	if (slapee != "") {
 		inChat = 0
-		for (i = 0; i < currSlapers.length; i++){
-			if (currSlapers[i] == slapee) {
+		for (i = 0; i < currUsers.length; i++){
+			if (currUsers[i] == slapee) {
 				inChat = 1;
 				break;
 			}
@@ -159,15 +159,14 @@ function slap(target, context, slapee) {
 		}
 	}
 	else {
-		var numPersons = currSlapers.length;
+		var numPersons = currUsers.length;
 		var person = Math.floor(Math.random() * numPersons);
 	
-		var slapee = currSlapers[person];
+		var slapee = currUsers[person];
 		client.say(target, "@" + slapee + ", YOU HAVE BEEN SLAPPED!");
 	}
 	
 }
-
 
 //Function called when the "doom" command is issued:
 //function created by wcj1
@@ -190,7 +189,7 @@ function givepts(target, context) {
 }
 
 // Helper function to send the correct type of message:
-//Know that Commands do not run in Whisper
+// Know that Commands do not run in Whisper
 function sendMessage (target, context, message) { 
     if (context['message-type'] === 'whisper') {
        client.whisper(target, message)
