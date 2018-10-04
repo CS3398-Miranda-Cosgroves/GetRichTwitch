@@ -1,6 +1,10 @@
 const tmi = require('tmi.js');
 const haikudos = require('haikudos');
 
+//channel variables
+var currUsers;
+var chanName;
+
 // Valid commands start with:
 let commandPrefix = '!';
 // Define configuration options:
@@ -23,9 +27,16 @@ let client = new tmi.client(opts)
 client.on('message', onMessageHandler)
 client.on('connected', onConnectedHandler)
 client.on('disconnected', onDisconnectedHandler)
+client.on("names", updateUsersHandler)
 
 // Connect to Twitch:
 client.connect()
+
+//called repeatedly at a set time to update users
+function updateUsersHandler (channel, users) {
+    currUsers = users;
+	chanName = channnel;
+});
 
 // Called every time a message comes in:
 function onMessageHandler (target, context, msg, self) {
@@ -78,6 +89,35 @@ function echo (target, context, params) {
     } else { // Nothing to echo
         console.log(`* Nothing to echo`)
     }
+}
+
+// Function called when the "slap" command is issued:
+function slap(target, context) {
+	var numPersons = currUsers.length;
+	var person = Math.floor(Math.random() * numPersons);
+	
+	var slapee = currUsers[person];
+	sendMessage(target, slapee + ", YOU HAVE BEEN SLAPPED!");	
+}
+
+// Function called when the "slap *user" command is issued:
+function slap(target, context, slapee) {
+	var inChat = 0;
+	var i;
+		
+	for (i = 0; i < currUsers.length; i++){
+		if (currUsers[i] == target) {
+			inChat = 1;
+			break;
+		}
+	}
+		
+	if (inChat){
+		sendMessage(target, slapee + ", YOU HAVE BEEN SLAPPED!");
+	}
+	else {
+		sendMessage(target, "user not in chat.");
+	}
 }
 
 // Helper function to send the correct type of message:
