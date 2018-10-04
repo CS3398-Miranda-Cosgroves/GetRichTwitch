@@ -2,8 +2,7 @@ const tmi = require('tmi.js');
 const haikudos = require('haikudos');
 
 //channel variables
-var currUsers;
-var chanName;
+var currUsers = [ 'MirandaCosgroveBot' ];
 
 // Valid commands start with:
 let commandPrefix = '!';
@@ -19,7 +18,7 @@ let opts = {
 }
 
 // These are the commands the bot knows (defined below):
-let knownCommands = { echo, haiku, doom, givepts } //add new commands to this list
+let knownCommands = { echo, haiku, doom, givepts, slap, coinflip } //add new commands to this list
 // Create a client with our options:
 let client = new tmi.client(opts)
 
@@ -27,16 +26,9 @@ let client = new tmi.client(opts)
 client.on('message', onMessageHandler)
 client.on('connected', onConnectedHandler)
 client.on('disconnected', onDisconnectedHandler)
-client.on("names", updateUsersHandler)
 
 // Connect to Twitch:
 client.connect()
-
-//called repeatedly at a set time to update users
-function updateUsersHandler (channel, users) {
-    currUsers = users;
-	chanName = channnel;
-}
 
 // Called every time a message comes in:
 function onMessageHandler (target, context, msg, self) {
@@ -79,6 +71,7 @@ function onDisconnectedHandler (reason) {
 }
 
 // Function called when the "echo" command is issued:
+// Function created by
 function echo (target, context, params) {
     // If there's something to echo:
     if (params.length) {
@@ -91,33 +84,88 @@ function echo (target, context, params) {
     }
 }
 
-// Function called when the "slap" command is issued:
-function slap(target, context) {
-	var numPersons = currUsers.length;
-	var person = Math.floor(Math.random() * numPersons);
+// Function called when the "haiku" command is issued:
+// Function created by
+function haiku (target, context) {
+	// Generate a new haiku:
+	haikudos((newHaiku) => {
+		// Split it line-by-line:
+		newHaiku.split('\n').forEach((h) => {
+			// Send each line separately:
+			sendMessage(target, context, h)
+		})
+	})
+}
 	
-	var slapee = currUsers[person];
-	sendMessage(target, slapee + ", YOU HAVE BEEN SLAPPED!");	
+// Function called when the "gamble" command is issued:
+// Function created by
+function gamble(target, context, params) {
+	var coin = Math.floor(Math.random() * 2);
+
+	//takes in bet input
+	if (params.length)
+		var msg = params.join(' ');
+
+	if (coin == 0)
+		coin = 'tails';
+	else
+		coin = 'heads';
+
+	// Prints gamble messages;
+	if (coin == 'tails' && coin == msg)
+		sendMessage(target, context, 'You bet on Tails and you won the bet (somehow). You won 50 coins');
+	else if (coin == 'heads' && coin == msg)
+		sendMessage(target, context, 'You bet on Heads and you won the bet (somehow). You won 50 coins');
+	else if (coin == 'tails' && !(coin == msg))
+		sendMessage(target, context, 'You bet on Heads and you lost the bet. You lost 100 coins..boohoo');
+	else if (coin == 'heads' && !(coin == msg))
+		sendMessage(target, context, 'You bet on Tails and you lost the bet. You lost 100 coins..boohoo');
 }
 
-// Function called when the "slap *user" command is issued:
+// Function called when the "coinflip" command is issued:
+// Function created by lts25
+function coinflip(target, context) {
+	var coin = Math.floor(Math.random() * 2);
+
+	// Print coin;
+	if (coin == 0)
+		sendMessage(target, context, 'The coin landed on Tails');
+	else if (coin == 1)
+		sendMessage(target, context, 'The coin landed on Heads');
+}
+	
+// Function called when the "slap" command is issued:
+// Function created by lts25
 function slap(target, context, slapee) {
-	var inChat = 0;
+	var inChat = 1;
 	var i;
-		
-	for (i = 0; i < currUsers.length; i++){
-		if (currUsers[i] == target) {
-			inChat = 1;
-			break;
+	
+	currSlapers.push(context.username);
+	console.log(currSlapers);
+	
+	if (slapee != "") {
+		inChat = 0
+		for (i = 0; i < currSlapers.length; i++){
+			if (currSlapers[i] == slapee) {
+				inChat = 1;
+				break;
+			}
+		}
+		if (inChat){
+		client.say(target, "@" + slapee + ", YOU HAVE BEEN SLAPPED!");
+		}
+		else {
+			client.say(target, "user not in slapable.");
 		}
 	}
-		
-	if (inChat){
-		sendMessage(target, slapee + ", YOU HAVE BEEN SLAPPED!");
-	}
 	else {
-		sendMessage(target, "user not in chat.");
+		var numPersons = currSlapers.length;
+		var person = Math.floor(Math.random() * numPersons);
+	
+		var slapee = currSlapers[person];
+		client.say(target, "@" + slapee + ", YOU HAVE BEEN SLAPPED!");
 	}
+	
 }
 
 // Helper function to send the correct type of message:
