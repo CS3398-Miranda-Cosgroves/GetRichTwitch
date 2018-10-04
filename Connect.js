@@ -36,7 +36,7 @@ client.connect()
 function updateUsersHandler (channel, users) {
     currUsers = users;
 	chanName = channnel;
-});
+}
 
 // Called every time a message comes in:
 function onMessageHandler (target, context, msg, self) {
