@@ -18,7 +18,7 @@ let opts = {
 }
 
 // These are the commands the bot knows (defined below):
-let knownCommands = { echo, haiku, doom, givepts, slap, coinflip, gamble, purge, commands} //add new commands to this list
+let knownCommands = { echo, haiku, doom, givepts, slap, coinflip, gamble, purge, commands, clear} //add new commands to this list
 
 // Create a client with our options:
 let client = new tmi.client(opts)
@@ -204,9 +204,14 @@ function purge(target, context, purgedUser)
 {
     if(purgedUser.length)
         var byebye = purgedUser.join(' ');
-    client.say(target, "/ban " + purgedUser);
-    client.say(target, "/unban " + purgedUser);
+    client.say(target, "/timeout " + purgedUser + " 1");
     client.say(target, purgedUser + " has had their chat removed due to profamity");
+}
+
+function clear(target, context)
+{
+	client.say(target, "/clear")
+	client.say(target, "BEGONE THOTS")
 }
 
 function commands(target, context)
