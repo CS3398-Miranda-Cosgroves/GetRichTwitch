@@ -9,3 +9,35 @@ function haiku (target, context) {
         })
     })
 }
+
+// Function called when the "hug" command is issued:
+function hug(target, context, huggee) {
+    var inChat = 1;
+    var i;
+
+    currUsers.push(context.username);
+    //console.log(currUsers);
+
+    if (huggee != "") {
+        inChat = 0
+        for (i = 0; i < currUsers.length; i++){
+            if (currUsers[i] == huggee) {
+                inChat = 1;
+                break;
+            }
+        }
+        if (inChat){
+            client.say(target, "@" + huggee + ", Awe, you have been hugged:)");
+        }
+        else {
+            client.say(target, "user not huggable.");
+        }
+    }
+    else {
+        var numPersons = currUsers.length;
+        var person = Math.floor(Math.random() * numPersons);
+
+        var huggee = currUsers[person];
+        client.say(target, "@" + huggee + ", Awe, you have been hugged:)");
+    }
+}
