@@ -10,12 +10,13 @@ times and games played.
 
 Currently the code can be built and runs without errors.
 
+Joel Martinez: "I plan on implementing subscriper detection and part of the Youtube API."
 
 -Michael Griffith
 -Cody Jandt
 -Eric Ross
 -Levi Stalsworth
--Joel Martinez 
+-Joel Martinez
 
 ********************************************************************************************************************************
                                                  RUNNING GETRICHTWITCH
