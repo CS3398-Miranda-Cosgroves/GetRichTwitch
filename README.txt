@@ -14,6 +14,9 @@ Joel Martinez: "I plan on implementing subscriper detection and part of the Yout
 
 Eric Ross: "I plan on finishing my research for the Spotify API, at which point I will start the code relating to the Spotify API."
 
+Cody Jandt: "I will be working on getting !givepts more functionality, such as storing points gained and a timer that only will allow 
+users to call !givepts only once every 10-15 minutes."
+
 -Michael Griffith
 -Cody Jandt
 -Eric Ross
