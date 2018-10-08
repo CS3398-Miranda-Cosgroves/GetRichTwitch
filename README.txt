@@ -11,6 +11,7 @@ times and games played.
 Currently the code can be built and runs without errors.
 
 Joel Martinez: "I plan on implementing subscriper detection and part of the Youtube API."
+
 Eric Ross: "I plan on finishing my research for the Spotify API, at which point I will start the code relating to the Spotify API."
 
 -Michael Griffith
