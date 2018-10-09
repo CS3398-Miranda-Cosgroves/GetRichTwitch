@@ -50,20 +50,26 @@ o What Went Well? (4 pts–Team) Four or more teambullets (4 pts)
 
 o What Might Be Impeding Us from Performing Better? One or more team bullets (1pts)
 1. Roadmap with obtainable goals.
-2.
+2. 
 3.
 4.
  
-o What Can We do to Improve? (5pt–Team) One or more team bullets 
+o What Can We do to Improve? (5pt–Team) One or more team bullets
+1.
+2.
+3.
+4.
+
 (5pts– Individual) One bullet per team member 
-Cody- 
+Cody- Use a calender or set dates on Zenhub.
 Levi-
 Eric-
 Joel-
 Michael-
 
 (5pts–Indvidual) With specific, measurable improvement action described 
-Cody- 
+Cody- I know that I have a problem with spacing out projects, I need to spread out my time more efficiently by spacing my projects out 
+and using a calender would help.
 Levi-
 Eric-
 Joel-
