@@ -17,7 +17,8 @@ Eric Ross: "I plan on finishing my research for the Spotify API, at which point 
 Cody Jandt: "I will be working on getting !givepts more functionality, such as storing points gained and a timer that only will allow 
 users to call !givepts only once every 10-15 minutes."
 
-Levi Stalsworth: "I will research back end options for creating a way to not have to use JavaScript for data managment, and implementing it as I gain the knowledge and availability."
+Levi Stalsworth: "I will research back end options for creating a way to not have to use JavaScript for data managment,
+and implementing it as I gain the knowledge and availability."
 
 -Michael Griffith
 -Cody Jandt
