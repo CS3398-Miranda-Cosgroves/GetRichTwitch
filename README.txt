@@ -22,6 +22,8 @@ I wrote the !givepts and !doom function and help coordinate whether or not we sh
 
 Levi Stalsworth: "I will research back end options for creating a way to not have to use JavaScript for data managment,
 and implementing it as I gain the knowledge and availability."
+I wrote the !coinflip and !slap functions and helped research the spotify and youtube APIs. !status was not able to be implemented
+correctly without the back end working, so it's under jurisdiction of my part of the next sprint. I learned JavaScript is terrible.
 
 Michael Griffith: "I will work with the Google API and HTML files to take data from users in the IRC and convert it
 into useable API calls on Google services such as Youtube."
