@@ -44,18 +44,18 @@ and implementing it as I gain the knowledge and availability."
 Retrospective: 
 o What Went Well? (4 pts–Team) Four or more teambullets (4 pts)
 1. Great teamwork on Slack
-2.
+2. Sufficient communication between the team members
 3.
 4.
 
 o What Might Be Impeding Us from Performing Better? One or more team bullets (1pts)
 1. Roadmap with obtainable goals.
-2. 
+2. Lack of complex Twitch bot API knowledge
 3.
 4.
  
 o What Can We do to Improve? (5pt–Team) One or more team bullets
-1.
+1. We need to come together to efficiently go over exactly what we can do with our Twitch bot
 2.
 3.
 4.
