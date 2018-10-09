@@ -234,16 +234,28 @@ function sendMessage (target, context, message) {
 //Bans and then unbans user to purge their messages from chat
 function purge(target, context, purgedUser)
 {
-    if(purgedUser.length)
-        var byebye = purgedUser.join(' ');
-    client.say(target, "/timeout " + purgedUser + " 1");
-    client.say(target, purgedUser + " has had their chat removed due to profamity");
+    if(context['mod'] === true) {
+        if (purgedUser.length)
+            var byebye = purgedUser.join(' ');
+        client.say(target, "/timeout " + purgedUser + " 1");
+        client.say(target, "Not just the " + purgedUser + " but the women and children too...");
+    }
+    else if(context['mod'] === false)
+    {
+        client.say(target, context['display-name'] + " your magic holds no power here.")
+    }
+
+    if(context['user-id'] === '194986251')
+    {
+        console.log("What did the Leprechaun say to the bald guy?");
+        console.log("Ah damn Griff's here shut up");
+    }
 }
 
 function clear(target, context)
 {
 	client.say(target, "/clear")
-	client.say(target, "BEGONE THOTS")
+	client.say(target, "Alright ya'll gettin' a little too nasty.")
 }
 
 function commands(target, context)
