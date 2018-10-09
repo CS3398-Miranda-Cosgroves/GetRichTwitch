@@ -18,7 +18,7 @@ let opts = {
 }
 
 // These are the commands the bot knows (defined below):
-let knownCommands = { echo, haiku, doom, givepts, slap, coinflip, gamble, purge, commands, clear} //add new commands to this list
+let knownCommands = { echo, haiku, doom, givepts, slap, coinflip, hug, gamble, purge, commands, clear} //add new commands to this list
 
 // Create a client with our options:
 let client = new tmi.client(opts)
@@ -96,6 +96,38 @@ function haiku (target, context) {
             sendMessage(target, context, h)
         })
     })
+}
+
+// Function called when the "hug" command is issued:
+function hug(target, context, huggee) {
+    var inChat = 1;
+    var i;
+
+    currUsers.push(context.username);
+    //console.log(currUsers);
+
+    if (huggee != "") {
+        inChat = 0
+        for (i = 0; i < currUsers.length; i++){
+            if (currUsers[i] == huggee) {
+                inChat = 1;
+                break;
+            }
+        }
+        if (inChat){
+            client.say(target, "@" + huggee + ", Awe, you have been hugged:)");
+        }
+        else {
+            client.say(target, "user not huggable.");
+        }
+    }
+    else {
+        var numPersons = currUsers.length;
+        var person = Math.floor(Math.random() * numPersons);
+
+        var huggee = currUsers[person];
+        client.say(target, "@" + huggee + ", Awe, you have been hugged:)");
+    }
 }
 
 // Function called when the "gamble" command is issued:
