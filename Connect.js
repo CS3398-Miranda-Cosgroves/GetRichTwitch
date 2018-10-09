@@ -1,5 +1,11 @@
 const tmi = require('tmi.js');
 const haikudos = require('haikudos');
+const getVideoId = require('get-video-id');
+const youtube = require('youtube-iframe-player');
+const http = require('http');
+const fs = require('fs');
+const hostname = 'localhost';
+const port = 5000;
 
 //channel variables
 let currUsers = [ 'MirandaCosgroveBot' ];
@@ -18,7 +24,7 @@ let opts = {
 }
 
 // These are the commands the bot knows (defined below):
-let knownCommands = { echo, haiku, doom, givepts, slap, coinflip, hug, gamble, purge, commands, clear} //add new commands to this list
+let knownCommands = { echo, haiku, doom, givepts, slap, coinflip, hug, gamble, purge, commands, clear, playvideo} //add new commands to this list
 
 // Create a client with our options:
 let client = new tmi.client(opts)
@@ -265,3 +271,23 @@ function commands(target, context)
         cmdStrings[cmdStrings.length] = " !" + commandName.toString() + " ";
     client.say(target, "Commands known:" + cmdStrings)
 }
+
+function playvideo(target, context, videoID) {
+    let server;
+    let ID = getVideoId(videoID.toString());
+    console.log(ID);
+    module.exports = {vidID : ID};
+    fs.readFile('./Documents/GitHub/GetRichTwitch/vidplay.html', function (err, html) {
+        if (err) {
+            throw err;
+        }
+            server = http.createServer(function(request, response) {
+            response.writeHeader(200, {"Content-Type": "text/html"});
+            response.write(html);
+            response.end();
+        }).listen(port, hostname, () => {
+            console.log(`Server running at http://${hostname}:${port}/`);
+        });
+    });
+}
+
