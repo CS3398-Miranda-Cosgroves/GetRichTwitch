@@ -43,27 +43,27 @@ and implementing it as I gain the knowledge and availability."
 
 Retrospective: 
 o What Went Well? (4 pts–Team) Four or more teambullets (4 pts)
-1.
+1. Great teamwork on Slack
 2.
 3.
 4.
 
 o What Might Be Impeding Us from Performing Better? One or more team bullets (1pts)
-1.
+1. Roadmap with obtainable goals.
 2.
 3.
 4.
  
 o What Can We do to Improve? (5pt–Team) One or more team bullets 
 (5pts– Individual) One bullet per team member 
-Cody-
+Cody- 
 Levi-
 Eric-
 Joel-
 Michael-
 
 (5pts–Indvidual) With specific, measurable improvement action described 
-Cody-
+Cody- 
 Levi-
 Eric-
 Joel-
