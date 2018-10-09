@@ -36,3 +36,32 @@ users to call !givepts only once every 10-15 minutes."
 7. Run connect.js by typing node connect.js
 8. Open a browser and go to https://www.twitch.tv/mirandacosgrovebot
 9. Type !commands in the chat box to see list of available commands.
+
+
+Retrospective: 
+o What Went Well? (4 pts–Team) Four or more teambullets (4 pts)
+1.
+2.
+3.
+4.
+
+o What Might Be Impeding Us from Performing Better? One or more team bullets (1pts)
+1.
+2.
+3.
+4.
+ 
+o What Can We do to Improve? (5pt–Team) One or more team bullets 
+(5pts– Individual) One bullet per team member 
+Cody-
+Levi-
+Eric-
+Joel-
+Michael-
+
+(5pts–Indvidual) With specific, measurable improvement action described 
+Cody-
+Levi-
+Eric-
+Joel-
+Michael-
