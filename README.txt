@@ -20,6 +20,9 @@ users to call !givepts only once every 10-15 minutes."
 Levi Stalsworth: "I will research back end options for creating a way to not have to use JavaScript for data managment,
 and implementing it as I gain the knowledge and availability."
 
+Michael Griffith: "I will work with the Google API and HTML files to take data from users in the IRC and convert it
+into useable API calls on Google services such as Youtube."
+
 -Michael Griffith
 -Cody Jandt
 -Eric Ross
