@@ -38,7 +38,7 @@ into useable API calls on Google services such as Youtube."
 3. Create folder on desktop (for easy access)
 4. Navigate to new folder directory in the Node.js command prompt
 5. Move connect.js into this new folder
-6. Type npm i tmi.js haikudos  //this will install the js files needed to run GetRichtwitch
+6. Type npm i tmi.js haikudos get-video-id youtube-iframe-player http fs//this will install the js files needed to run GetRichtwitch
 7. Run connect.js by typing node connect.js
 8. Open a browser and go to https://www.twitch.tv/mirandacosgrovebot
 9. Type !commands in the chat box to see list of available commands.
