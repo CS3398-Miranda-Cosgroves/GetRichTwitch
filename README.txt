@@ -65,7 +65,7 @@ o What Might Be Impeding Us from Performing Better? One or more team bullets (1p
 o What Can We do to Improve? (5pt–Team) One or more team bullets
 1. We need to come together to efficiently go over exactly what we can do with our Twitch bot
 2. Communicate more about each other's code, a lot of obfuscation for other modules at the moment could cause issues later
-3.
+3. 
 4.
 
 (5pts– Individual) One bullet per team member 
@@ -76,10 +76,12 @@ Joel-
 Michael- Create a convention for how our code is formatted, and more documentation on pre/post conditions of functions
 
 (5pts–Indvidual) With specific, measurable improvement action described 
-Cody- I know that I have a problem with spacing out projects, I need to spread out my time more efficiently by spacing my projects out 
-and using a calender would help.
-Levi- Further understanding JavaScript and backends working with JavaScript will increase productivity. Once my desktop is built,
-I will be able to increase productivity as it wont take 10 minuets to turn on my computer and 5 minuets to open an IDE. Better weekend time managment. 
+Cody- I know that I have a problem with spacing out projects, I need to spread out my time more efficiently by spacing my 
+projects out and using Zenhub more effectively would help.
+Levi- Further understanding JavaScript and backends working with JavaScript will increase productivity. Once my desktop is 
+built, I will be able to increase productivity as it wont take 10 minuets to turn on my computer and 5 minuets to open an IDE. 
+Better weekend time managment. 
 Eric-
 Joel-
-Michael- Need to implement "fail fast", try to get small working pieces in progress to find roadblocks/issues faster instead of planning all resources and libraries aheaad of time
+Michael- Need to implement "fail fast", try to get small working pieces in progress to find roadblocks/issues faster instead of 
+planning all resources and libraries aheaad of time
