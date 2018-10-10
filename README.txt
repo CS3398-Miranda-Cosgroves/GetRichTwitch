@@ -70,7 +70,7 @@ o What Can We do to Improve? (5pt–Team) One or more team bullets
 
 (5pts– Individual) One bullet per team member 
 Cody- Use a calender or set dates on Zenhub.
-Levi-
+Levi- Once We understand JavaScript functionality, we can make a working UML, making code cleaner and more efficient to code.
 Eric-
 Joel-
 Michael-
@@ -78,7 +78,8 @@ Michael-
 (5pts–Indvidual) With specific, measurable improvement action described 
 Cody- I know that I have a problem with spacing out projects, I need to spread out my time more efficiently by spacing my projects out 
 and using a calender would help.
-Levi-
+Levi- Further understanding JavaScript and backends working with JavaScript will increase productivity. Once my desktop is built,
+I will be able to increase productivity as it wont take 10 minuets to turn on my computer and 5 minuets to open an IDE. Better weekend time managment. 
 Eric-
 Joel-
 Michael-
