@@ -43,7 +43,8 @@ into useable API calls on Google services such as Youtube."
 3. Create folder on desktop (for easy access)
 4. Navigate to new folder directory in the Node.js command prompt
 5. Move connect.js into this new folder
-6. Type npm i tmi.js haikudos get-video-id youtube-iframe-player http fs //this will install the js files needed to run GetRichtwitch
+6. Type npm i tmi.js haikudos get-video-id youtube-iframe-player http fs //this will install the js files needed to run 
+GetRichtwitch
 7. Run connect.js by typing node connect.js
 8. Open a browser and go to https://www.twitch.tv/mirandacosgrovebot
 9. Type !commands in the chat box to see list of available commands.
@@ -65,7 +66,7 @@ o What Might Be Impeding Us from Performing Better? One or more team bullets (1p
 o What Can We do to Improve? (5pt–Team) One or more team bullets
 1. We need to come together to efficiently go over exactly what we can do with our Twitch bot
 2. Communicate more about each other's code, a lot of obfuscation for other modules at the moment could cause issues later
-3. 
+3. Repeat 1. and 2.
 4.
 
 (5pts– Individual) One bullet per team member 
