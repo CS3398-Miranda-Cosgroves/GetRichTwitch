@@ -67,13 +67,13 @@ o What Can We do to Improve? (5pt–Team) One or more team bullets
 1. We need to come together to efficiently go over exactly what we can do with our Twitch bot
 2. Communicate more about each other's code, a lot of obfuscation for other modules at the moment could cause issues later
 3. Repeat 1. and 2.
-4.
+4. Accurately guage the complexity of functions we want to implement
 
 (5pts– Individual) One bullet per team member 
 Cody- Use a calender or set dates on Zenhub.
 Levi- Once We understand JavaScript functionality, we can make a working UML, making code cleaner and more efficient to code.
 Eric- Better communication on my part.
-Joel-
+Joel- Research what resources are available online to help my coding
 Michael- Create a convention for how our code is formatted, and more documentation on pre/post conditions of functions
 
 (5pts–Indvidual) With specific, measurable improvement action described 
@@ -85,6 +85,6 @@ Better weekend time managment.
 Eric- Since i'm not the only one working on the Spotify API, it might be good for me to reach out to other team mates and
 discuss what i've learned, and see what they've learned, and approach this more cooperatively. And this applies to all 
 aspects of the project, not just the Spotify API.
-Joel-
+Joel- I need to start looking at other Twitch bot API's so that I can see what goals I can achieve in regards to the functionality of the Twitch bot code.
 Michael- Need to implement "fail fast", try to get small working pieces in progress to find roadblocks/issues faster instead of 
 planning all resources and libraries aheaad of time
