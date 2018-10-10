@@ -82,7 +82,9 @@ projects out and using Zenhub more effectively would help.
 Levi- Further understanding JavaScript and backends working with JavaScript will increase productivity. Once my desktop is 
 built, I will be able to increase productivity as it wont take 10 minuets to turn on my computer and 5 minuets to open an IDE. 
 Better weekend time managment. 
-Eric- Since i'm not the only one working on the Spotify API, it might be good for me to reach out to other team mates and discuss what i've learned, and see what they've learned, and approach this more cooperatively. And this applies to all aspects of the project, not just the Spotify API.
+Eric- Since i'm not the only one working on the Spotify API, it might be good for me to reach out to other team mates and
+discuss what i've learned, and see what they've learned, and approach this more cooperatively. And this applies to all 
+aspects of the project, not just the Spotify API.
 Joel-
 Michael- Need to implement "fail fast", try to get small working pieces in progress to find roadblocks/issues faster instead of 
 planning all resources and libraries aheaad of time
