@@ -43,7 +43,7 @@ into useable API calls on Google services such as Youtube."
 3. Create folder on desktop (for easy access)
 4. Navigate to new folder directory in the Node.js command prompt
 5. Move connect.js into this new folder
-6. Type npm i tmi.js haikudos get-video-id youtube-iframe-player http fs//this will install the js files needed to run GetRichtwitch
+6. Type npm i tmi.js haikudos get-video-id youtube-iframe-player http fs //this will install the js files needed to run GetRichtwitch
 7. Run connect.js by typing node connect.js
 8. Open a browser and go to https://www.twitch.tv/mirandacosgrovebot
 9. Type !commands in the chat box to see list of available commands.
@@ -53,18 +53,18 @@ Retrospective:
 o What Went Well? (4 pts–Team) Four or more teambullets (4 pts)
 1. Great teamwork on Slack
 2. Sufficient communication between the team members
-3.
-4.
+3. Efficient collaboration for expansion of basic features, lots of communication and quick changes/updates
+4. Team got to work quickly, no one lagging behind on pushes
 
 o What Might Be Impeding Us from Performing Better? One or more team bullets (1pts)
 1. Roadmap with obtainable goals.
 2. Lack of complex Twitch bot API knowledge
-3.
-4.
+3. JavaScript does not easily conform to OOP design, designing and re-designing sucks up more time
+4. Lack of "end-game" vision for bot features
  
 o What Can We do to Improve? (5pt–Team) One or more team bullets
 1. We need to come together to efficiently go over exactly what we can do with our Twitch bot
-2.
+2. Communicate more about each other's code, a lot of obfuscation for other modules at the moment could cause issues later
 3.
 4.
 
@@ -73,7 +73,7 @@ Cody- Use a calender or set dates on Zenhub.
 Levi- Once We understand JavaScript functionality, we can make a working UML, making code cleaner and more efficient to code.
 Eric-
 Joel-
-Michael-
+Michael- Create a convention for how our code is formatted, and more documentation on pre/post conditions of functions
 
 (5pts–Indvidual) With specific, measurable improvement action described 
 Cody- I know that I have a problem with spacing out projects, I need to spread out my time more efficiently by spacing my projects out 
@@ -82,4 +82,4 @@ Levi- Further understanding JavaScript and backends working with JavaScript will
 I will be able to increase productivity as it wont take 10 minuets to turn on my computer and 5 minuets to open an IDE. Better weekend time managment. 
 Eric-
 Joel-
-Michael-
+Michael- Need to implement "fail fast", try to get small working pieces in progress to find roadblocks/issues faster instead of planning all resources and libraries aheaad of time
