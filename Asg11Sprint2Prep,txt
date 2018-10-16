@@ -4,3 +4,5 @@ Functions:
   - Cody: !givepts, !doom
   - Levi: !slap, !coinflip
   - Eric: !haiku
+
+Functions referenced by other functions:
