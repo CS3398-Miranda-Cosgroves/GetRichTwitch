@@ -7,3 +7,11 @@ Functions:
 
 Functions referenced by other functions:
 All functions are referenced by onMessageHandler after a trigger, which is referenced by onConnectedHandler
+
+FOR SPRINT 2:
+Functions being referenced by new features in Sprint 2:
+!commands will reference all added features (anything added to recognized 'knowncommands' list in master Connect.js file)
+User point storage will reference: !givepts, !gamble, !coinflip
+Song queue will reference: !playvideo, !songrequest, !skipsong, !mysong, !currentsong
+Trade will reference !gamble and getPts/setPts functions from upcoming User point storage
+Subscriber detection will reference User point storage and !status
