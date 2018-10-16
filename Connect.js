@@ -41,3 +41,12 @@ function hug(target, context, huggee) {
         client.say(target, "@" + huggee + ", Awe, you have been hugged:)");
     }
 }
+
+
+function commands(target, context)
+{
+    var cmdStrings = [];
+    for(var commandName in knownCommands)
+        cmdStrings[cmdStrings.length] = " !" + commandName.toString() + " ";
+    client.say(target, "Commands known:" + cmdStrings)
+}
