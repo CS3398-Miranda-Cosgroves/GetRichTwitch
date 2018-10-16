@@ -1,8 +1,9 @@
 Functions:
   - Joel: !gamble
-  - Michael: !playvideo, !clear, !purge, !commands
+  - Michael: !playvideo, !clear, !purge
   - Cody: !givepts, !doom
   - Levi: !slap, !coinflip
-  - Eric: !haiku
+  - Eric: !haiku, !commands
 
 Functions referenced by other functions:
+All functions are referenced by onMessageHandler after a trigger, which is referenced by onConnectedHandler
