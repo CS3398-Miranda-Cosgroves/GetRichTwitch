@@ -137,9 +137,27 @@ function hug(target, context, huggee) {
 }
 
 // Function called when the "gamble" command is issued:
-// Function created by
+// Function created by JoelMartinez0404
 function gamble(target, context, params) {
     var coin = Math.floor(Math.random() * 2);
+    var viewer = context.username;
+    //console.log(viewer);
+
+    var i = 0;
+    while (viewerObj[i] != viewer) {
+        if (viewerObj == viewer) {
+            //var oldPts = viewerObj.viewerPts;
+            console.log("user is already in array")
+            break;
+        }
+        else {
+            viewerObj.push(viewer);
+            console.log("user has been added to array")
+        }
+        i++;
+    }
+
+    console.log(viewerObj);
 
     //takes in bet input
     if (params.length)
@@ -151,14 +169,25 @@ function gamble(target, context, params) {
         coin = 'heads';
 
     // Prints gamble messages;
-    if (coin == 'tails' && coin == msg)
+    if (msg != 'tails' && msg != 'heads') {
+        sendMessage(target, context, 'You did not enter either tails or heads loser...smh');
+    }
+    else if (coin == 'tails' && coin == msg) {
         sendMessage(target, context, 'You bet on Tails and you won the bet (somehow). You won 50 coins');
-    else if (coin == 'heads' && coin == msg)
+        //userpoints + 50 (Java backend)
+    }
+    else if (coin == 'heads' && coin == msg) {
         sendMessage(target, context, 'You bet on Heads and you won the bet (somehow). You won 50 coins');
-    else if (coin == 'tails' && !(coin == msg))
+        //userpoints + 50 (Jb)
+    }
+    else if (coin == 'tails' && coin != msg) {
         sendMessage(target, context, 'You bet on Heads and you lost the bet. You lost 100 coins..boohoo');
-    else if (coin == 'heads' && !(coin == msg))
+        //userpoints - 100 (Jb)
+    }
+    else if (coin == 'heads' && coin != msg) {
         sendMessage(target, context, 'You bet on Tails and you lost the bet. You lost 100 coins..boohoo');
+        //userpoints - 100 (Jb)
+    }
 }
 
 // Function called when the "coinflip" command is issued:
