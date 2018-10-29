@@ -9,6 +9,7 @@ const port = 5000;
 
 //channel variables
 let currUsers = [ 'MirandaCosgroveBot' ];
+var viewerObj = [];
 
 // Valid commands start with:
 let commandPrefix = '!';
@@ -251,9 +252,23 @@ function doom(target, context, params) {
 //Function called when "givepts" command is issued:
 //Function created by wcj1
 function givepts(target, context) {
+
+    var viewer = context.username;
+    //console.log(viewer);
     var pts = Math.floor((Math.random()+1 ) * 10);
-    sendMessage(target, context, context.username + ' got ' + pts + ' points. YAY!');
-    //sendMessage(target, context, user.username );
+    
+    var i = 0;
+    while (viewerObj[i] != viewer) {
+        if (viewerObj == viewer) {
+            //var oldPts = viewerObj.viewerPts;
+            console.log("user is already in array")
+            break;
+        }
+        else {
+            viewerObj.push(viewer);
+            console.log("user has been added to array")
+        }
+        i++;
 }
 
 // Helper function to send the correct type of message:
