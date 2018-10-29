@@ -259,7 +259,7 @@ function givepts(target, context) {
     
     var i = 0;
     while (viewerObj[i] != viewer) {
-        if (viewerObj == viewer) {
+        if (viewerObj[i] == viewer) {
             //var oldPts = viewerObj.viewerPts;
             console.log("user is already in array")
             break;
@@ -267,6 +267,7 @@ function givepts(target, context) {
         else {
             viewerObj.push(viewer);
             console.log("user has been added to array")
+	    break;
         }
         i++;
 }
