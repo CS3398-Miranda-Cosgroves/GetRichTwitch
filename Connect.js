@@ -154,6 +154,7 @@ function gamble(target, context, params) {
         else {
             viewerObj.push(viewer);
             console.log("user has been added to array")
+	    break;
         }
         i++;
     }
@@ -259,7 +260,7 @@ function givepts(target, context) {
     
     var i = 0;
     while (viewerObj[i] != viewer) {
-        if (viewerObj[i] == viewer) {
+        if (viewerObj == viewer) {
             //var oldPts = viewerObj.viewerPts;
             console.log("user is already in array")
             break;
