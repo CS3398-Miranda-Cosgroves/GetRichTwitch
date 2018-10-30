@@ -25,7 +25,7 @@ let opts = {
 }
 
 // These are the commands the bot knows (defined below):
-let knownCommands = { echo, haiku, doom, givepts, slap, coinflip, hug, gamble, purge, commands, clear, playvideo} //add new commands to this list
+let knownCommands = { echo, haiku, doom, givepts, slap, coinflip, hug, gamble, purge, commands, clear, playvideo, showpts} //add new commands to this list
 
 // Create a client with our options:
 let client = new tmi.client(opts)
@@ -274,6 +274,27 @@ function givepts(target, context) {
     }
 
     sendMessage(target, context, context.username + ' got ' + pts + ' points. YAY!');  
+}
+
+//Function called when "showpts" command is issued:
+//Function created by wcj1 
+function showpts(target, context) {
+    var viewer = context.username;
+
+    var i = 0;
+    while (i <= viewerObj.length) {
+        if (viewerObj[i] == viewer) {
+            //sendMessage(target, context, context.username + ' has a total of ' + pts + ' points. YAY!');
+            console.log("viewer is in showpts array")
+            break;
+        }
+        else if (i == viewerObj.length) {
+            console.log(viewer + " is not in array");
+            sendMessage(target, context, context.username + ' has no points!');
+            break;
+        }
+        i++;
+    }    
 }
 
 // Helper function to send the correct type of message:
