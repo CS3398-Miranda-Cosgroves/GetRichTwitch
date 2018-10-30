@@ -257,7 +257,7 @@ function givepts(target, context) {
     var viewer = context.username;
     //console.log(viewer);
     var pts = Math.floor((Math.random()+1 ) * 10);
-    
+
     var i = 0;
     while (viewerObj[i] != viewer) {
         if (viewerObj == viewer) {
@@ -268,11 +268,11 @@ function givepts(target, context) {
         else {
             viewerObj.push(viewer);
             console.log("user has been added to array")
-	    break;
+            break;
         }
         i++;
-    }
-    sendMessage(target, context, context.username + ' got ' + pts + ' points. YAY!');
+    } 
+    sendMessage(target, context, context.username + ' got ' + pts + ' points. YAY!');  
 }
 
 // Helper function to send the correct type of message:
