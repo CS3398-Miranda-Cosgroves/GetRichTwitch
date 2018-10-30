@@ -271,6 +271,8 @@ function givepts(target, context) {
 	    break;
         }
         i++;
+    }
+    sendMessage(target, context, context.username + ' got ' + pts + ' points. YAY!');
 }
 
 // Helper function to send the correct type of message:
