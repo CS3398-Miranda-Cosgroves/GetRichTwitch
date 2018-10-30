@@ -259,19 +259,20 @@ function givepts(target, context) {
     var pts = Math.floor((Math.random()+1 ) * 10);
 
     var i = 0;
-    while (viewerObj[i] != viewer) {
-        if (viewerObj == viewer) {
+    while (i <= viewerObj.length) {
+        if (viewerObj[i] == viewer) {
             //var oldPts = viewerObj.viewerPts;
-            console.log("user is already in array")
+            console.log(viewer + " is already in array");
             break;
         }
-        else {
+        else if (i == viewerObj.length) {
             viewerObj.push(viewer);
-            console.log("user has been added to array")
+            console.log(viewer + " has been added to array");
             break;
         }
         i++;
-    } 
+    }
+
     sendMessage(target, context, context.username + ' got ' + pts + ' points. YAY!');  
 }
 
