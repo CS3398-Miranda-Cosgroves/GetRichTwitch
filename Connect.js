@@ -324,19 +324,16 @@ function commands(target, context)
 function playvideo(target, context, videoID) {
     let server;
     let ID = getVideoId(videoID.toString());
+    let JSONfilepath = "C:\\Users\\Michael\\Documents\\GitHub\\GetRichTwitch\\JSON\\song-request-update.json";
     console.log(ID);
-    module.exports = {vidID : ID};
-    fs.readFile('./Documents/GitHub/GetRichTwitch/vidplay.html', function (err, html) {
-        if (err) {
-            throw err;
+    console.log(context);
+    let requestinfo = {SongID : ID, Name : context['username'], UserID : context['user-id']};
+    console.log(requestinfo);
+    let data = JSON.stringify(requestinfo, null, 2);
+    fs.writeFile(JSONfilepath, data, 'utf8', function(err) {
+            if (err) throw err;
+            console.log('complete');
         }
-            server = http.createServer(function(request, response) {
-            response.writeHeader(200, {"Content-Type": "text/html"});
-            response.write(html);
-            response.end();
-        }).listen(port, hostname, () => {
-            console.log(`Server running at http://${hostname}:${port}/`);
-        });
-    });
+    );
 }
 
