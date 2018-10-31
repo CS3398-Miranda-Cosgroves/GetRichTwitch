@@ -10,6 +10,8 @@ const port = 5000;
 //channel variables
 let currUsers = [ 'MirandaCosgroveBot' ];
 var viewerObj = [];
+var ptsObj = [];
+var coinObj = [];
 
 // Valid commands start with:
 let commandPrefix = '!';
@@ -261,13 +263,17 @@ function givepts(target, context) {
     var i = 0;
     while (i <= viewerObj.length) {
         if (viewerObj[i] == viewer) {
-            //var oldPts = viewerObj.viewerPts;
+            ptsObj[i] += pts;
             console.log(viewer + " is already in array");
+            console.log(ptsObj[i]);
             break;
         }
         else if (i == viewerObj.length) {
             viewerObj.push(viewer);
+            ptsObj.push(pts);
+            coinObj.push(0);
             console.log(viewer + " has been added to array");
+            console.log(ptsObj[i]);
             break;
         }
         i++;
@@ -284,7 +290,7 @@ function showpts(target, context) {
     var i = 0;
     while (i <= viewerObj.length) {
         if (viewerObj[i] == viewer) {
-            //sendMessage(target, context, context.username + ' has a total of ' + pts + ' points. YAY!');
+            sendMessage(target, context, context.username + ' has ' + ptsObj[i] + ' total  points!');
             console.log("viewer is in showpts array")
             break;
         }
