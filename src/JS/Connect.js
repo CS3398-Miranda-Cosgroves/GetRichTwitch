@@ -27,7 +27,7 @@ let opts = {
 }
 
 // These are the commands the bot knows (defined below):
-let knownCommands = { echo, haiku, doom, givepts, slap, coinflip, hug, gamble, purge, commands, clear, playvideo, showpts} //add new commands to this list
+let knownCommands = { echo, haiku, doom, givepts, slap, coinflip, hug, gamble, purge, commands, clear, playvideo, showpts, trade} //add new commands to this list
 
 // Create a client with our options:
 let client = new tmi.client(opts)
@@ -302,6 +302,39 @@ function showpts(target, context) {
         i++;
     }    
 }
+
+//Function called when "trade" command is issued:
+//Function created by wcj1 
+function trade(target, context) {
+    var viewer = context.username;
+
+    var i = 0;
+    while (i <= viewerObj.length) {
+        if (viewerObj[i] == viewer) {
+            if(ptsObj[i] >= 100) {
+                ptsObj[i] -= 100;
+                coinObj[i] += 10;
+            }
+            else if(ptsObj[i] >= 50) {
+                ptsObj[i] -= 50;
+                coinObj[i] += 5;
+            }
+            else if(ptsObj[i] >= 10) {
+                ptsObj[i] -= 10;
+                coinObj[i] += 1;
+            }
+            sendMessage(target, context, context.username + ' has ' + ptsObj[i] + ' total  points and ' + coinObj[i] + ' total coins now!');
+            break;
+        }
+        else if (i == viewerObj.length) {
+            console.log(viewer + " is not in array");
+            sendMessage(target, context, context.username + ' has no points!');
+            break;
+        }
+        i++;
+    }    
+}
+
 
 // Helper function to send the correct type of message:
 // Know that Commands do not run in Whisper
