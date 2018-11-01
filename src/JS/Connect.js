@@ -34,6 +34,7 @@ let client = new tmi.client(opts)
 
 // Register our event handlers (defined below):
 client.on('message', onMessageHandler)
+client.on("subscription", onSubHandler)
 client.on('connected', onConnectedHandler)
 client.on('disconnected', onDisconnectedHandler)
 
@@ -67,6 +68,10 @@ function onMessageHandler (target, context, msg, self) {
     } else {
         console.log(`* Unknown command ${commandName} from ${context.username}`)
     }
+}
+
+function onSubHandler (target, context) {
+    console.log(`/*/*/*/*/*Subscriber has been detected/*/*/*/*/*`)
 }
 
 // Called every time the bot connects to Twitch chat:
@@ -156,7 +161,7 @@ function gamble(target, context, params) {
         else {
             viewerObj.push(viewer);
             console.log("user has been added to array")
-	    break;
+            break;
         }
         i++;
     }
@@ -279,11 +284,11 @@ function givepts(target, context) {
         i++;
     }
 
-    sendMessage(target, context, context.username + ' got ' + pts + ' points. YAY!');  
+    sendMessage(target, context, context.username + ' got ' + pts + ' points. YAY!');
 }
 
 //Function called when "showpts" command is issued:
-//Function created by wcj1 
+//Function created by wcj1
 function showpts(target, context) {
     var viewer = context.username;
 
@@ -300,11 +305,11 @@ function showpts(target, context) {
             break;
         }
         i++;
-    }    
+    }
 }
 
 //Function called when "trade" command is issued:
-//Function created by wcj1 
+//Function created by wcj1
 function trade(target, context) {
     var viewer = context.username;
 
@@ -332,7 +337,7 @@ function trade(target, context) {
             break;
         }
         i++;
-    }    
+    }
 }
 
 
@@ -369,8 +374,8 @@ function purge(target, context, purgedUser)
 
 function clear(target, context)
 {
-	client.say(target, "/clear")
-	client.say(target, "Alright ya'll gettin' a little too nasty.")
+    client.say(target, "/clear")
+    client.say(target, "Alright ya'll gettin' a little too nasty.")
 }
 
 function commands(target, context)
@@ -380,7 +385,6 @@ function commands(target, context)
         cmdStrings[cmdStrings.length] = " !" + commandName.toString() + " ";
     client.say(target, "Commands known:" + cmdStrings)
 }
-
 function playvideo(target, context, videoID) {
     let server;
     let ID = getVideoId(videoID.toString());
@@ -396,4 +400,3 @@ function playvideo(target, context, videoID) {
         }
     );
 }
-
