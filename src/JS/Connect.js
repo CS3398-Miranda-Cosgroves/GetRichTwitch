@@ -114,34 +114,31 @@ function haiku (target, context) {
 
 // Function called when the "hug" command is issued:
 function hug(target, context, huggee) {
-    var inChat = 1;
-    var i;
+    var viewer = context.username;
+    //console.log(viewer);
+    var hugs = 1;
+    var hugCoins = 5;
 
-    currUsers.push(context.username);
-    //console.log(currUsers);
-
-    if (huggee != "") {
-        inChat = 0
-        for (i = 0; i < currUsers.length; i++){
-            if (currUsers[i] == huggee) {
-                inChat = 1;
-                break;
-            }
+    var i = 0;
+    while (i <= viewerObj.length) {
+        if (viewerObj[i] == viewer) {
+            hugsObj[i] += hugs;
+            console.log(viewer + " is already in array");
+            console.log(hugsObj[i]);
+            break;
         }
-        if (inChat){
-            client.say(target, "@" + huggee + ", Awe, you have been hugged:)");
+        else if (i == viewerObj.length) {
+            viewerObj.push(viewer);
+            hugsObj.push(hugs);
+            console.log(viewer + " has been added to array");
+            console.log(hugsObj[i]);
+            break;
         }
-        else {
-            client.say(target, "user not huggable.");
-        }
+        i++;
     }
-    else {
-        var numPersons = currUsers.length;
-        var person = Math.floor(Math.random() * numPersons);
 
-        var huggee = currUsers[person];
-        client.say(target, "@" + huggee + ", Awe, you have been hugged:)");
-    }
+    sendMessage(target, context, context.username + ' has ' + ' been HUGGED!');
+
 }
 
 // Function called when the "gamble" command is issued:
