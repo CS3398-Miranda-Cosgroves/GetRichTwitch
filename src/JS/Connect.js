@@ -27,7 +27,7 @@ let opts = {
 }
 
 // These are the commands the bot knows (defined below):
-let knownCommands = { echo, haiku, doom, givepts, slap, coinflip, hug, gamble, purge, commands, clear, playvideo, showpts, trade} //add new commands to this list
+let knownCommands = { echo, haiku, doom, givepts, slap, coinflip, hug, showHugs, gamble, purge, commands, clear, playvideo, showpts, trade} //add new commands to this list
 
 // Create a client with our options:
 let client = new tmi.client(opts)
@@ -138,8 +138,29 @@ function hug(target, context, huggee) {
     }
 
     sendMessage(target, context, context.username + ' has ' + ' been HUGGED!');
-
 }
+
+
+//Function called when "showHugs" command is issued:
+function showHugs(target, context) {
+    var viewer = context.username;
+
+    var i = 0;
+    while (i <= viewerObj.length) {
+        if (viewerObj[i] == viewer) {
+            sendMessage(target, context, context.username + ' has ' + hugsObj[i] + ' total  hugs!');
+            console.log("viewer is in showpts array")
+            break;
+        }
+        else if (i == viewerObj.length) {
+            console.log(viewer + " is not in array");
+            sendMessage(target, context, context.username + ' has no hugs!');
+            break;
+        }
+        i++;
+    }    
+}
+
 
 // Function called when the "gamble" command is issued:
 // Function created by JoelMartinez0404
