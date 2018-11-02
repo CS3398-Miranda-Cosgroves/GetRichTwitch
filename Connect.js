@@ -24,7 +24,7 @@ let opts = {
 }
 
 // These are the commands the bot knows (defined below):
-let knownCommands = { echo, haiku, doom, givepts, slap, coinflip, hug, gamble, purge, commands, clear, playvideo} //add new commands to this list
+let knownCommands = { echo, haiku, doom, givepts, slap, coinflip, hug, gamble, purge, commands, clear, playvideo, stats } //add new commands to this list
 
 // Create a client with our options:
 let client = new tmi.client(opts)
@@ -291,6 +291,14 @@ function clear(target, context)
 {
 	client.say(target, "/clear")
 	client.say(target, "Alright ya'll gettin' a little too nasty.")
+}
+
+function stats(target, context) {
+	client.say(target, context['dispaly-name'] + "Here's your status");
+	if (context['mod'] === true) {
+		client.say(target, context['dispaly-name'] + " is a mod");
+	}
+	client.say(target, "Your badges are: " + context['badges-raw']);
 }
 
 function commands(target, context)
