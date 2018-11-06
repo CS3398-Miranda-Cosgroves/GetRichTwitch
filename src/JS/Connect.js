@@ -60,7 +60,7 @@ let opts = {
 }
 
 // These are the commands the bot knows (defined below):
-let knownCommands = { echo, haiku, doom, givepts, slap, coinflip, hug, showHugs, discipline, gamble, purge, commands, clear, playvideo, showpts, trade} //add new commands to this list
+let knownCommands = { echo, haiku, doom, givepts, slap, coinflip, hug, showHugs, discipline, gamble, purge, commands, clear, playvideo, showpts, trade, stats} //add new commands to this list
 
 // Create a client with our options:
 let client = new tmi.client(opts)
@@ -618,6 +618,13 @@ function createResource(properties) {
     return resource;
 }
 
+function stats(target, context) {
+	client.say(target, context['display-name'] + " Here's your status")
+	if (context['mod'] === true) {
+		client.say(target, context['display-name'] + " is a mod")
+	}
+	client.say(target, "Your badges are: " + context['badges-raw']);
+}
 
 function playlistItemsInsert(auth, requestData) {
     var service = google.youtube('v3');
