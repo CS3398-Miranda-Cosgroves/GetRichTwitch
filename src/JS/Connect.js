@@ -1,14 +1,12 @@
 const tmi = require('tmi.js');
 const haikudos = require('haikudos');
 const getVideoId = require('get-video-id');
-const http = require('http');
 const fs = require('fs');
 const {google} = require('googleapis');
 const { OAuth2Client } = require('google-auth-library');
 const readline = require('readline');
+const fetchVideoInfo = require('youtube-info');
 
-const hostname = 'localhost';
-const port = 8000;
 let datetime = new Date();
 
 //channel variables
@@ -29,7 +27,7 @@ var TOKEN_DIR = (process.env.HOME || process.env.HOMEPATH ||
 var TOKEN_PATH = TOKEN_DIR + 'google-apis-nodejs-quickstart.json';
 
 // Load client secrets from a local file.
-fs.readFile('client_secret.json', function processClientSecrets(err, content) {
+fs.readFile('src/JSON/client_secret.json', function processClientSecrets(err, content) {
     if (err) {
         console.log('Error loading client secret file: ' + err);
         return;
@@ -70,9 +68,12 @@ client.on('message', onMessageHandler)
 client.on("subscription", onSubHandler)
 client.on('connected', onConnectedHandler)
 client.on('disconnected', onDisconnectedHandler)
-
+var IRCCONNECT = false;
 // Connect to Twitch:
-client.connect()
+function connectIRC(){
+    client.connect()
+    IRCCONNECT = true;
+}
 
 // Called every time a message comes in:
 function onMessageHandler (target, context, msg, self) {
@@ -435,10 +436,10 @@ function sendMessage (target, context, message) {
 function purge(target, context, purgedUser)
 {
     if(context['mod'] === true) {
-        if (purgedUser.length)
-            var byebye = purgedUser.join(' ');
-        client.say(target, "/timeout " + purgedUser + " 1");
-        client.say(target, "Not just the " + purgedUser + " but the women and children too...");
+        if (purgedUser.toString().length > 2) {
+            client.say(target, "/timeout " + purgedUser + " 1");
+            client.say(target, "Not just the " + purgedUser + " but the women and children too...");
+        }
     }
     else if(context['mod'] === false)
     {
@@ -481,18 +482,21 @@ function playvideo(target, context, videoID) {
     let requestinfo = {SongID : ID, Name : context['username'], UserID : context['user-id']};
     console.log(requestinfo);
     let data = JSON.stringify(requestinfo, null, 2);
-    fs.writeFile('JSON/song-request-update.json', data, 'utf8', function(err) {
+    fs.writeFile('src/JSON/song-request-update.json', data, 'utf8', function(err) {
             if (err) throw err;
             console.log('complete');
         });
 
     console.log("Playlist ID: " + session_playlist_id);
-    playlistItemInsertNow(ID['id']);
+    playlistItemInsertNow(ID['id'], target);
 }
 
 
 
 function playlistsInsert(auth, requestData) {
+    if(!IRCCONNECT){
+        connectIRC();
+    }
     var service = google.youtube('v3');
     var parameters = removeEmptyParameters(requestData['params']);
     parameters['auth'] = auth;
@@ -569,6 +573,7 @@ function storeToken(token) {
     }
     fs.writeFileSync(TOKEN_PATH, JSON.stringify(token));
     console.log('Token stored to ' + TOKEN_PATH);
+    connectIRC();
 }
 
 /**
@@ -636,27 +641,38 @@ function playlistItemsInsert(auth, requestData) {
             console.log('The API returned an error: ' + err);
             return;
         }
-        console.log(response);
     });
+
 }
 
-function playlistItemInsertNow(id)
+function playlistItemInsertNow(id, target)
 {
 
 // Load client secrets from a local file.
-    fs.readFile('client_secret.json', function processClientSecrets(err, content) {
+    fs.readFile('src/JSON/client_secret.json', function processClientSecrets(err, content) {
         if (err) {
             console.log('Error loading client secret file: ' + err);
             return;
         }
         console.log(id);
+
+        fetchVideoInfo(id).then(function (videoInfo) {
+            if(videoInfo.duration < 400)
+            {
+                authorize(JSON.parse(content), {'params': {'part': 'snippet',
+                        'onBehalfOfContentOwner': ''}, 'properties': {'snippet.playlistId': session_playlist_id,
+                        'snippet.resourceId.kind': 'youtube#video',
+                        'snippet.resourceId.videoId': id,
+                        'snippet.position': ''
+                    }}, playlistItemsInsert);
+                client.say(target, videoInfo.title + " has been added to the request queue");
+            }
+            else
+            {
+                client.say(target, "Hey jabroni your video is too long");
+            }
+        });
         // Authorize a client with the loaded credentials, then call the YouTube API.
-        authorize(JSON.parse(content), {'params': {'part': 'snippet',
-                'onBehalfOfContentOwner': ''}, 'properties': {'snippet.playlistId': session_playlist_id,
-                'snippet.resourceId.kind': 'youtube#video',
-                'snippet.resourceId.videoId': id,
-                'snippet.position': ''
-            }}, playlistItemsInsert);
 
     });
 }
