@@ -134,7 +134,7 @@ function echo (target, context, params) {
 }
 
 // Function called when the "haiku" command is issued:
-// Function created by
+// Function created by Eric Ross
 function haiku (target, context) {
     // Generate a new haiku:
     haikudos((newHaiku) => {
@@ -147,6 +147,7 @@ function haiku (target, context) {
 }
 
 // Function called when the "hug" command is issued:
+//Function created by Eric Ross
 function hug(target, context, huggee) {
     var viewer = context.username;
     //console.log(viewer);
@@ -176,6 +177,7 @@ function hug(target, context, huggee) {
 
 
 //Function called when "showHugs" command is issued:
+//Function created by Eric Ross
 function showHugs(target, context) {
     var viewer = context.username;
 
@@ -196,6 +198,7 @@ function showHugs(target, context) {
 }
 
 //Function called when the "discipline command is issued:
+//Function created by Eric Ross
 function discipline(target, context, disciplinee) {
 	    var viewer = context.username;
 	    //console.log(viewer);
