@@ -14,7 +14,9 @@ let currUsers = [ 'MirandaCosgroveBot' ];
 var viewerObj = [];
 var ptsObj = [];
 var coinObj = [];
-var session_playlist_id; //Holds playlist ID for this session
+var hugsObj = [];
+var discObj = [];
+var session_playlist_id = 'PL6ndaQfhrP0GbGU1J785MG1dGUrRjROSp'; //Holds playlist ID for this session
 
 /**Initialize GoogleAuth2 before connecting
 */
