@@ -246,6 +246,8 @@ function gamble(target, context, params) {
         }
         else {
             viewerObj.push(viewer);
+            ptsObj.push(0);
+            coinObj.push(0);
             console.log("user has been added to array")
             break;
         }
