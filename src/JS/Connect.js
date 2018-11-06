@@ -1,17 +1,50 @@
 const tmi = require('tmi.js');
 const haikudos = require('haikudos');
 const getVideoId = require('get-video-id');
-const youtube = require('youtube-iframe-player');
 const http = require('http');
 const fs = require('fs');
+const {google} = require('googleapis');
+const { OAuth2Client } = require('google-auth-library');
+const readline = require('readline');
+
 const hostname = 'localhost';
-const port = 5000;
+const port = 8000;
+let datetime = new Date();
 
 //channel variables
 let currUsers = [ 'MirandaCosgroveBot' ];
 var viewerObj = [];
 var ptsObj = [];
 var coinObj = [];
+var session_playlist_id; //Holds playlist ID for this session
+
+/**Initialize GoogleAuth2 before connecting
+*/
+
+// If modifying these scopes, delete your previously saved credentials
+// at ~/.credentials/google-apis-nodejs-quickstart.json
+var SCOPES = ['https://www.googleapis.com/auth/youtube.force-ssl']
+var TOKEN_DIR = (process.env.HOME || process.env.HOMEPATH ||
+    process.env.USERPROFILE) + '/.credentials/';
+var TOKEN_PATH = TOKEN_DIR + 'google-apis-nodejs-quickstart.json';
+
+// Load client secrets from a local file.
+fs.readFile('client_secret.json', function processClientSecrets(err, content) {
+    if (err) {
+        console.log('Error loading client secret file: ' + err);
+        return;
+    }
+    // Authorize a client with the loaded credentials, then call the YouTube API.
+    //See full code sample for authorize() function code.
+    authorize(JSON.parse(content), {'params': {'part': 'snippet,status',
+            'onBehalfOfContentOwner': ''}, 'properties': {'snippet.title': 'STREAM ' + datetime.toString(),
+            'snippet.description': '',
+            'snippet.tags[]': '',
+            'snippet.defaultLanguage': '',
+            'status.privacyStatus': ''
+        }}, playlistsInsert);
+});
+
 
 // Valid commands start with:
 let commandPrefix = '!';
@@ -421,8 +454,14 @@ function purge(target, context, purgedUser)
 
 function clear(target, context)
 {
-    client.say(target, "/clear")
-    client.say(target, "Alright ya'll gettin' a little too nasty.")
+    if(context['mod'] === true) {
+        client.say(target, "/clear")
+        client.say(target, "Alright ya'll gettin' a little too nasty.")
+    }
+    else
+    {
+        client.say(target, "You do not have access to this command because your clothes are out of style.");
+    }
 }
 
 function commands(target, context)
@@ -432,18 +471,191 @@ function commands(target, context)
         cmdStrings[cmdStrings.length] = " !" + commandName.toString() + " ";
     client.say(target, "Commands known:" + cmdStrings)
 }
+
+function handleClientLoad() {
+    gapi.load('client:auth2', initClient);
+}
+
 function playvideo(target, context, videoID) {
-    let server;
     let ID = getVideoId(videoID.toString());
-    let JSONfilepath = "C:\\Users\\Michael\\Documents\\GitHub\\GetRichTwitch\\JSON\\song-request-update.json";
-    console.log(ID);
-    console.log(context);
     let requestinfo = {SongID : ID, Name : context['username'], UserID : context['user-id']};
     console.log(requestinfo);
     let data = JSON.stringify(requestinfo, null, 2);
-    fs.writeFile(JSONfilepath, data, 'utf8', function(err) {
+    fs.writeFile('JSON/song-request-update.json', data, 'utf8', function(err) {
             if (err) throw err;
             console.log('complete');
-        }
-    );
+        });
+
+    console.log("Playlist ID: " + session_playlist_id);
+    playlistItemInsertNow(ID['id']);
 }
+
+
+
+function playlistsInsert(auth, requestData) {
+    var service = google.youtube('v3');
+    var parameters = removeEmptyParameters(requestData['params']);
+    parameters['auth'] = auth;
+    parameters['resource'] = createResource(requestData['properties']);
+    service.playlists.insert(parameters, function(err, response) {
+        if (err) {
+            console.log('The API returned an error: ' + err);
+            return;
+        }
+        console.log(response.data.id);
+        session_playlist_id = response.data.id.toString();
+    });
+}
+
+
+/**
+ * Create an OAuth2 client with the given credentials, and then execute the
+ * given callback function.
+ */
+function authorize(credentials, requestData, callback) {
+    var clientSecret = credentials.installed.client_secret;
+    var clientId = credentials.installed.client_id;
+    var redirectUrl = credentials.installed.redirect_uris[0];
+    var oauth2Client = new OAuth2Client(clientId, clientSecret, redirectUrl);
+    // Check if we have previously stored a token.
+    fs.readFile(TOKEN_PATH, function(err, token) {
+        if (err) {
+            getNewToken(oauth2Client, requestData, callback);
+        } else {
+            oauth2Client.credentials = JSON.parse(token);
+            callback(oauth2Client, requestData);
+        }
+    });
+}
+
+/**
+ * Get and store new token after prompting for user authorization, and then
+ * execute the given callback with the authorized OAuth2 client.
+ */
+function getNewToken(oauth2Client, requestData, callback) {
+    var authUrl = oauth2Client.generateAuthUrl({
+        access_type: 'offline',
+        scope: SCOPES
+    });
+    console.log('Authorize this app by visiting this url: ', authUrl);
+    var rl = readline.createInterface({
+        input: process.stdin,
+        output: process.stdout
+    });
+    rl.question('Enter the code from that page here: ', function(code) {
+        rl.close();
+        oauth2Client.getToken(code, function(err, token) {
+            if (err) {
+                console.log('Error while trying to retrieve access token', err);
+                return;
+            }
+            oauth2Client.credentials = token;
+            storeToken(token);
+            callback(oauth2Client, requestData);
+        });
+    });
+}
+
+/**
+ * Store token to disk
+ */
+function storeToken(token) {
+    try {
+        fs.mkdirSync(TOKEN_DIR);
+    } catch (err) {
+        if (err.code != 'EEXIST') {
+            throw err;
+        }
+    }
+    fs.writeFileSync(TOKEN_PATH, JSON.stringify(token));
+    console.log('Token stored to ' + TOKEN_PATH);
+}
+
+/**
+ * Remove parameters that do not have values.
+ */
+function removeEmptyParameters(params) {
+    for (var p in params) {
+        if (!params[p] || params[p] == 'undefined') {
+            delete params[p];
+        }
+    }
+    return params;
+}
+
+/**
+ * Create a JSON object, representing an API resource, from a list of
+ * properties and their values.
+ */
+function createResource(properties) {
+    var resource = {};
+    var normalizedProps = properties;
+    for (var p in properties) {
+        var value = properties[p];
+        if (p && p.substr(-2, 2) == '[]') {
+            var adjustedName = p.replace('[]', '');
+            if (value) {
+                normalizedProps[adjustedName] = value.split(',');
+            }
+            delete normalizedProps[p];
+        }
+    }
+    for (var p in normalizedProps) {
+        // Leave properties that don't have values out of inserted resource.
+        if (normalizedProps.hasOwnProperty(p) && normalizedProps[p]) {
+            var propArray = p.split('.');
+            var ref = resource;
+            for (var pa = 0; pa < propArray.length; pa++) {
+                var key = propArray[pa];
+                if (pa == propArray.length - 1) {
+                    ref[key] = normalizedProps[p];
+                } else {
+                    ref = ref[key] = ref[key] || {};
+                }
+            }
+        };
+    }
+    return resource;
+}
+
+
+function playlistItemsInsert(auth, requestData) {
+    var service = google.youtube('v3');
+    var parameters = removeEmptyParameters(requestData['params']);
+    parameters['auth'] = auth;
+    parameters['resource'] = createResource(requestData['properties']);
+    service.playlistItems.insert(parameters, function(err, response) {
+        if (err) {
+            console.log('The API returned an error: ' + err);
+            return;
+        }
+        console.log(response);
+    });
+}
+
+function playlistItemInsertNow(id)
+{
+
+// Load client secrets from a local file.
+    fs.readFile('client_secret.json', function processClientSecrets(err, content) {
+        if (err) {
+            console.log('Error loading client secret file: ' + err);
+            return;
+        }
+        console.log(id);
+        // Authorize a client with the loaded credentials, then call the YouTube API.
+        authorize(JSON.parse(content), {'params': {'part': 'snippet',
+                'onBehalfOfContentOwner': ''}, 'properties': {'snippet.playlistId': session_playlist_id,
+                'snippet.resourceId.kind': 'youtube#video',
+                'snippet.resourceId.videoId': id,
+                'snippet.position': ''
+            }}, playlistItemsInsert);
+
+    });
+}
+
+
+
+
+
+
