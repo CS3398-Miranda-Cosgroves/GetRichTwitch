@@ -34,7 +34,8 @@ or you will be prompted to authorize MirandaCosgroveBOT to access your YouTube a
 
 
 ******************************************************************************************************************************** 
-												 Sprint 1 plan of action
+												 NEXT STEPS SPRINT 1
+												 
 ********************************************************************************************************************************
 
 
@@ -67,7 +68,7 @@ into useable API calls on Google services such as Youtube."
 
 ********************************************************************************************************************************
                                                  RETROSPECTIVE 
-												 Sprint 1
+												 SPRINT 1
 ********************************************************************************************************************************
  
 o What Went Well? (4 pts–Team) Four or more teambullets (4 pts)
@@ -110,9 +111,42 @@ planning all resources and libraries aheaad of time
 
 
 
+******************************************************************************************************************************** 
+												 NEXT STEPS SPRINT 2
+												 
+********************************************************************************************************************************
+
+
+
+Joel Martinez: "I plan on implementing subscriper detection and part of the Youtube API."
+For this sprint completed the gamble function and I helped debug code.
+
+Eric Ross: "I plan on finishing my research for the Spotify API, at which point I will start the code relating to the Spotify API."
+I wrote the !hug and !haiku functions, along with researching the Spotify API.
+
+Cody Jandt: "I will be working on getting !givepts more functionality, such as storing points gained and a timer that only will allow 
+users to call !givepts only once every 10-15 minutes."
+I wrote the !givepts and !doom function and help coordinate whether or not we should implement Spotify third-party extensions.
+
+Levi Stalsworth: "I will research back end options for creating a way to not have to use JavaScript for data managment,
+and implementing it as I gain the knowledge and availability."
+I wrote the !coinflip and !slap functions and helped research the spotify and youtube APIs. !status was not able to be implemented
+correctly without the back end working, so it's under jurisdiction of my part of the next sprint. I learned JavaScript is terrible.
+
+Michael Griffith: "I will work with the Google API and HTML files to take data from users in the IRC and convert it
+into useable API calls on Google services such as Youtube."
+
+-Michael Griffith
+-Cody Jandt
+-Eric Ross
+-Levi Stalsworth
+-Joel Martinez
+
+
+
 ********************************************************************************************************************************
                                                  RETROSPECTIVE 
-												 Sprint 2
+												 SPRINT 2
 ******************************************************************************************************************************** 
 
 
@@ -134,6 +168,13 @@ o What Can We do to Improve? (5pt–Team) One or more team bullets
 2. 
 3. 
 4. 
+
+(5 pts –Individual) Team member reports on the results of their Sprint 1 “measurable improvement action.”
+Cody- 
+Levi-
+Eric- 
+Joel- 
+Michael- 
 
 (5pts– Individual) One bullet per team member 
 Cody- 
