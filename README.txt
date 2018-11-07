@@ -125,7 +125,7 @@ Cody Jandt: "Coins will finally have a purpose. Also, I will be working on makin
 
 Levi Stalsworth: "I will work Storing data in files through java backend" 
 
-Michael Griffith: 
+Michael Griffith: "I will work on synergizing current features to allow interaction between the video queue and user data (coins/points), as well as retroactive documentation for all existing features now that functionality is starting to come to a plateau"
 
 -Michael Griffith
 -Cody Jandt
@@ -146,19 +146,19 @@ o What Went Well? (4 pts–Team) Four or more teambullets (4 pts)
 1. Great teamwork on Slack
 2. We definitly understand what we can and can't do right now
 3. Project has good substance and feels rewarding.
-4. 
+4. We are completing things on time, features are coming together with fewer and fewer bugs.
 
 o What Might Be Impeding Us from Performing Better? One or more team bullets (1pts)
-1. Blocks
-2. Assignments and exams during our sprint
+1. Blocks/Assignments and exams during our sprint
+2. Large files in node.js get cluttered, need better documentation and maybe even a table of contents/prototypes to make expansion easier
 3. 
 4. 
  
 o What Can We do to Improve? (5pt–Team) One or more team bullets
 1. More team talks about where everyone is.
-2. 
-3. 
-4. 
+2. Communication about what tools to use that will affect the entire project instead of each using our own ideas separately, cut down on project/directory size
+3. Need more stress testing on features once they are complete before we move on
+4. Keep researching language tools for node.js to improve features (Atomic functions, testing suites, cool fonts etc)
 
 (5 pts –Individual) Team member reports on the results of their Sprint 1 “measurable improvement action.”
 Cody- I failed to use a calender to better organize my time. The second week of the sprint I had a lot of other projects due and didn't manage time. 
@@ -168,7 +168,7 @@ managment, time alloted for working on sprint suddenly became time working on as
 Eric- 
 Joel- I got a good portion of what I meant to do, but exams and assignments put a lot of strain of the amount of time I had
 to work on the sprint. Time management is a must for this incoming sprint.
-Michael-  
+Michael-  We are getting small pieces of features out quickly, and development has sped up because of it. Breaking down things into smaller chunks has let bad ideas get found out faster, especially with the video queue portion I worked on.
 
 (5pts–Indvidual) With specific, measurable improvement action described 
 Cody- Like Joel I need to be pushing code more consistentlty and not putting it on the backburner because it isn't the next thing due.
@@ -176,4 +176,4 @@ Levi- Work more closely with teammates on backend. Get more sleep so there are l
 Eric- 
 Joel- I can create a schedule and dedicate an hour or more on days I know I can work on our code. I also need to push code
 more consistently.
-Michael- 
+Michael- I need to push my small workable pieces of code to get input and allow for testing of each smaller unit by other members instead of sitting on a feature until it is completely done
