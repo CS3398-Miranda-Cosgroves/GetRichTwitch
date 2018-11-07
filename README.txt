@@ -35,7 +35,7 @@ or you will be prompted to authorize MirandaCosgroveBOT to access your YouTube a
 
 ******************************************************************************************************************************** 
 												 NEXT STEPS SPRINT 1
-												 to be compleeted in sprint 2
+												 to be completed in sprint 2
 ********************************************************************************************************************************
 
 
@@ -113,12 +113,13 @@ planning all resources and libraries aheaad of time
 
 ******************************************************************************************************************************** 
 												 NEXT STEPS SPRINT 2
-												 to be compleeted in sprint 3
+												 to be completed in sprint 3
 ********************************************************************************************************************************
 
 
 
-Joel Martinez: 
+Joel Martinez: "I will create the basis for grabbing subscribers info so put into our Java backend. I will also need to help Cody with manipulating users points and coins"
+For this sprint I added subscriber detection and updated the gamble functon to integrate with pushing user's data to backend. Who stills uses JavaScript? Bleh.
 
 Eric Ross: 
 
@@ -145,13 +146,13 @@ Michael Griffith:
 
 o What Went Well? (4 pts–Team) Four or more teambullets (4 pts)
 1. Great teamwork on Slack
-2. 
+2. We definitly understand what we can and can't do right now
 3. 
 4. 
 
 o What Might Be Impeding Us from Performing Better? One or more team bullets (1pts)
 1. 
-2. 
+2. Assignments and exams during our sprint
 3. 
 4. 
  
@@ -167,12 +168,14 @@ Levi- My computer was built, my weekends were not entirely under my control. I h
 now through researching portion of sprint 2. Midterms and unexpected assignments had an adverse effect on weekly time 
 managment, time alloted for working on sprint suddenly became time working on assignments due on top of sprint. 
 Eric- 
-Joel- 
+Joel- I got a good portion of what I meant to do, but exams and assignments put a lot of strain of the amount of time I had
+to work on the sprint. Time management is a must for this incoming sprint.
 Michael-  
 
 (5pts–Indvidual) With specific, measurable improvement action described 
 Cody- 
 Levi- Work more closely with teammates on backend. Get more sleep so there are less typos when coding
 Eric- 
-Joel- 
+Joel- I can create a schedule and dedicate an hour or more on days I know I can work on our code. I also need to push code more
+consistently.
 Michael- 
