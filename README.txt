@@ -10,6 +10,35 @@ times and games played.
 
 Currently the code can be built and runs without errors.
 
+
+
+********************************************************************************************************************************
+                                                 RUNNING GETRICHTWITCH
+
+********************************************************************************************************************************
+
+
+
+1. Install Node.js here https://nodejs.org/en/
+2. Once installed run Node.js commmand prompt
+3. Change your active directory to where GetRichTwitch is saved (cd C:\...GetRichTwitch)
+4. Copy this: npm i tmi.js haikudos get-video-id googleapis google-auth-library youtube-info //this will install the js files needed to run GetRichTwitch
+	And paste it into your Node.js command prompt
+5. Run connect.js by typing node src/JS/connect.js while your working directory is set to the GetRichTwitch folder
+6. Open a browser and go to https://www.twitch.tv/mirandacosgrovebot
+7. Type !commands in the chat box to see list of available commands.
+
+**For !playvideo and other features that require youtube API you will be required to create your own client_secrets.json file with your youtube account info
+or you will be prompted to authorize MirandaCosgroveBOT to access your YouTube account data**
+
+
+
+******************************************************************************************************************************** 
+												 Sprint 1 plan of action
+********************************************************************************************************************************
+
+
+
 Joel Martinez: "I plan on implementing subscriper detection and part of the Youtube API."
 For this sprint completed the gamble function and I helped debug code.
 
@@ -34,24 +63,13 @@ into useable API calls on Google services such as Youtube."
 -Levi Stalsworth
 -Joel Martinez
 
+
+
 ********************************************************************************************************************************
-                                                 RUNNING GETRICHTWITCH
-
+                                                 RETROSPECTIVE 
+												 Sprint 1
 ********************************************************************************************************************************
-1. Install Node.js here https://nodejs.org/en/
-2. Once installed run Node.js commmand prompt
-3. Change your active directory to where GetRichTwitch is saved (cd C:\...GetRichTwitch)
-4. Copy this: npm i tmi.js haikudos get-video-id googleapis google-auth-library youtube-info //this will install the js files needed to run GetRichTwitch
-	And paste it into your Node.js command prompt
-5. Run connect.js by typing node src/JS/connect.js while your working directory is set to the GetRichTwitch folder
-6. Open a browser and go to https://www.twitch.tv/mirandacosgrovebot
-7. Type !commands in the chat box to see list of available commands.
-
-**For !playvideo and other features that require youtube API you will be required to create your own client_secrets.json file with your youtube account info
-or you will be prompted to authorize MirandaCosgroveBOT to access your YouTube account data**
-
-
-Retrospective: 
+ 
 o What Went Well? (4 pts–Team) Four or more teambullets (4 pts)
 1. Great teamwork on Slack
 2. Sufficient communication between the team members
@@ -89,3 +107,44 @@ aspects of the project, not just the Spotify API.
 Joel- I need to start looking at other Twitch bot API's so that I can see what goals I can achieve in regards to the functionality of the Twitch bot code.
 Michael- Need to implement "fail fast", try to get small working pieces in progress to find roadblocks/issues faster instead of 
 planning all resources and libraries aheaad of time
+
+
+
+********************************************************************************************************************************
+                                                 RETROSPECTIVE 
+												 Sprint 2
+******************************************************************************************************************************** 
+
+
+
+o What Went Well? (4 pts–Team) Four or more teambullets (4 pts)
+1. Great teamwork on Slack
+2. 
+3. 
+4. 
+
+o What Might Be Impeding Us from Performing Better? One or more team bullets (1pts)
+1. 
+2. 
+3. 
+4. 
+ 
+o What Can We do to Improve? (5pt–Team) One or more team bullets
+1. 
+2. 
+3. 
+4. 
+
+(5pts– Individual) One bullet per team member 
+Cody- 
+Levi-
+Eric- 
+Joel- 
+Michael- 
+
+(5pts–Indvidual) With specific, measurable improvement action described 
+Cody- 
+Levi-  
+Eric- 
+Joel- 
+Michael- 
