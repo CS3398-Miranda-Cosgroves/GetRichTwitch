@@ -118,8 +118,10 @@ planning all resources and libraries aheaad of time
 
 
 
-Joel Martinez: "I will create the basis for grabbing subscribers info so put into our Java backend. I will also need to help Cody with manipulating users points and coins"
-For this sprint I added subscriber detection and updated the gamble functon to integrate with pushing user's data to backend. Who stills uses JavaScript? Bleh.
+Joel Martinez: "I will create the basis for grabbing subscribers info so put into our Java backend. I will also need to help
+Cody with manipulating users points and coins"
+For this sprint I added subscriber detection and updated the gamble functon to integrate with pushing user's data to backend.
+Who stills uses JavaScript? Bleh.
 
 Eric Ross: 
 
@@ -176,6 +178,6 @@ Michael-
 Cody- 
 Levi- Work more closely with teammates on backend. Get more sleep so there are less typos when coding
 Eric- 
-Joel- I can create a schedule and dedicate an hour or more on days I know I can work on our code. I also need to push code more
-consistently.
+Joel- I can create a schedule and dedicate an hour or more on days I know I can work on our code. I also need to push code
+more consistently.
 Michael- 
