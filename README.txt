@@ -35,7 +35,7 @@ or you will be prompted to authorize MirandaCosgroveBOT to access your YouTube a
 
 ******************************************************************************************************************************** 
 												 NEXT STEPS SPRINT 1
-												 
+												 to be compleeted in sprint 2
 ********************************************************************************************************************************
 
 
@@ -113,28 +113,20 @@ planning all resources and libraries aheaad of time
 
 ******************************************************************************************************************************** 
 												 NEXT STEPS SPRINT 2
-												 
+												 to be compleeted in sprint 3
 ********************************************************************************************************************************
 
 
 
-Joel Martinez: "I plan on implementing subscriper detection and part of the Youtube API."
-For this sprint completed the gamble function and I helped debug code.
+Joel Martinez: 
 
-Eric Ross: "I plan on finishing my research for the Spotify API, at which point I will start the code relating to the Spotify API."
-I wrote the !hug and !haiku functions, along with researching the Spotify API.
+Eric Ross: 
 
-Cody Jandt: "I will be working on getting !givepts more functionality, such as storing points gained and a timer that only will allow 
-users to call !givepts only once every 10-15 minutes."
-I wrote the !givepts and !doom function and help coordinate whether or not we should implement Spotify third-party extensions.
+Cody Jandt: 
 
-Levi Stalsworth: "I will research back end options for creating a way to not have to use JavaScript for data managment,
-and implementing it as I gain the knowledge and availability."
-I wrote the !coinflip and !slap functions and helped research the spotify and youtube APIs. !status was not able to be implemented
-correctly without the back end working, so it's under jurisdiction of my part of the next sprint. I learned JavaScript is terrible.
+Levi Stalsworth: "I will work Storing data in files through java backend" 
 
-Michael Griffith: "I will work with the Google API and HTML files to take data from users in the IRC and convert it
-into useable API calls on Google services such as Youtube."
+Michael Griffith: 
 
 -Michael Griffith
 -Cody Jandt
@@ -171,21 +163,16 @@ o What Can We do to Improve? (5pt–Team) One or more team bullets
 
 (5 pts –Individual) Team member reports on the results of their Sprint 1 “measurable improvement action.”
 Cody- 
-Levi-
+Levi- My computer was built, my weekends were not entirely under my control. I have a better understanding of JavaScript
+now through researching portion of sprint 2. Midterms and unexpected assignments had an adverse effect on weekly time 
+managment, time alloted for working on sprint suddenly became time working on assignments due on top of sprint. 
 Eric- 
 Joel- 
-Michael- 
-
-(5pts– Individual) One bullet per team member 
-Cody- 
-Levi-
-Eric- 
-Joel- 
-Michael- 
+Michael-  
 
 (5pts–Indvidual) With specific, measurable improvement action described 
 Cody- 
-Levi-  
+Levi- Work more closely with teammates on backend. Get more sleep so there are less typos when coding
 Eric- 
 Joel- 
 Michael- 
