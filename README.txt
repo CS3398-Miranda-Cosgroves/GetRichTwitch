@@ -2,11 +2,7 @@
 GetRichTwitch
 
 Description: GetRichTwitch is an automated system, commonly known as a “bot”, made by the Miranda Cosgroves team at Texas State
-that monitors activity on the Twitch.tv site and aggregates the data in an easily digestible format. It monitors the chat content 
-for trigger strings to drive input and responses to control things such as games, moderator controls, donation tracking, etc. 
-This project aims to use image processing and machine learning to track donations and subscribers of users on twitch to estimate
-their income over different time frames, as well as to estimate the potential and mean values for incomes streams of different 
-times and games played.
+that monitors activity on the Twitch.tv site and aggregates the data in an easily digestible format. It monitors the chat content for trigger strings to drive input and responses to control things such as games, moderator controls, donation tracking, etc. This project aims to use image processing and machine learning to track donations and subscribers of users on twitch to estimate their income over different time frames, as well as to estimate the potential and mean values for incomes streams of different times and games played.
 
 Currently the code can be built and runs without errors.
 
@@ -125,7 +121,7 @@ Who stills uses JavaScript? Bleh.
 
 Eric Ross: 
 
-Cody Jandt: 
+Cody Jandt: "Coins will finally have a purpose. Also, I will be working on making the data persistent."
 
 Levi Stalsworth: "I will work Storing data in files through java backend" 
 
@@ -149,23 +145,23 @@ Michael Griffith:
 o What Went Well? (4 pts–Team) Four or more teambullets (4 pts)
 1. Great teamwork on Slack
 2. We definitly understand what we can and can't do right now
-3. 
+3. Project has good substance and feels rewarding.
 4. 
 
 o What Might Be Impeding Us from Performing Better? One or more team bullets (1pts)
-1. 
+1. Blocks
 2. Assignments and exams during our sprint
 3. 
 4. 
  
 o What Can We do to Improve? (5pt–Team) One or more team bullets
-1. 
+1. More team talks about where everyone is.
 2. 
 3. 
 4. 
 
 (5 pts –Individual) Team member reports on the results of their Sprint 1 “measurable improvement action.”
-Cody- 
+Cody- I failed to use a calender to better organize my time. The second week of the sprint I had a lot of other projects due and didn't manage time. 
 Levi- My computer was built, my weekends were not entirely under my control. I have a better understanding of JavaScript
 now through researching portion of sprint 2. Midterms and unexpected assignments had an adverse effect on weekly time 
 managment, time alloted for working on sprint suddenly became time working on assignments due on top of sprint. 
@@ -175,7 +171,7 @@ to work on the sprint. Time management is a must for this incoming sprint.
 Michael-  
 
 (5pts–Indvidual) With specific, measurable improvement action described 
-Cody- 
+Cody- Like Joel I need to be pushing code more consistentlty and not putting it on the backburner because it isn't the next thing due.
 Levi- Work more closely with teammates on backend. Get more sleep so there are less typos when coding
 Eric- 
 Joel- I can create a schedule and dedicate an hour or more on days I know I can work on our code. I also need to push code
