@@ -153,7 +153,7 @@ o What Might Be Impeding Us from Performing Better? One or more team bullets (1p
 1. Blocks/Assignments and exams during our sprint
 2. Large files in node.js get cluttered, need better documentation and maybe even a table of contents/prototypes to make expansion easier
 3. Deprecation of many useful features
-4. 
+4. Forgetting when Sprints are due
  
 o What Can We do to Improve? (5pt–Team) One or more team bullets
 1. More team talks about where everyone is.
