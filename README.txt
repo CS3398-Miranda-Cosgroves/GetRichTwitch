@@ -176,4 +176,4 @@ Levi- Work more closely with teammates on backend. Get more sleep so there are l
 Eric- 
 Joel- I can create a schedule and dedicate an hour or more on days I know I can work on our code. I also need to push code
 more consistently.
-Michael- I need to push my small workable pieces of code to get input and allow for testing of each smaller unit by other members/users instead of sitting on a feature until it is completely done
+Michael- I need to start testing on a larger scale to find edge cases
