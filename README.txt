@@ -152,7 +152,7 @@ o What Went Well? (4 pts–Team) Four or more teambullets (4 pts)
 o What Might Be Impeding Us from Performing Better? One or more team bullets (1pts)
 1. Blocks/Assignments and exams during our sprint
 2. Large files in node.js get cluttered, need better documentation and maybe even a table of contents/prototypes to make expansion easier
-3. 
+3. Deprecation of many useful features
 4. 
  
 o What Can We do to Improve? (5pt–Team) One or more team bullets
