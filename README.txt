@@ -119,7 +119,8 @@ Cody with manipulating users points and coins"
 For this sprint I added subscriber detection and updated the gamble functon to integrate with pushing user's data to backend.
 Who stills uses JavaScript? Bleh.
 
-Eric Ross: 
+Eric Ross: "I will work on connecting certain commands, such as !hug and !discipline, to give those commands more purpose. 
+I will also work on expanding existing commands, such as !slap, to try to give those commands more purpose as well. 
 
 Cody Jandt: "Coins will finally have a purpose. Also, I will be working on making the data persistent."
 
@@ -165,7 +166,8 @@ Cody- I failed to use a calender to better organize my time. The second week of 
 Levi- My computer was built, my weekends were not entirely under my control. I have a better understanding of JavaScript
 now through researching portion of sprint 2. Midterms and unexpected assignments had an adverse effect on weekly time 
 managment, time alloted for working on sprint suddenly became time working on assignments due on top of sprint. 
-Eric- 
+Eric- I didn't accomplish what i had originally set out to accomplish, but once i redirected course, i accomplished the 
+majority of my tasks. Better research and better time management would help keep me on a consistant, productive path.
 Joel- I got a good portion of what I meant to do, but exams and assignments put a lot of strain of the amount of time I had
 to work on the sprint. Time management is a must for this incoming sprint.
 Michael-  We are getting small pieces of features out quickly, and development has sped up because of it. Breaking down things into smaller chunks has let bad ideas get found out faster, especially with the video queue portion I worked on.
@@ -173,7 +175,8 @@ Michael-  We are getting small pieces of features out quickly, and development h
 (5pts–Indvidual) With specific, measurable improvement action described 
 Cody- Like Joel I need to be pushing code more consistentlty and not putting it on the backburner because it isn't the next thing due.
 Levi- Work more closely with teammates on backend. Get more sleep so there are less typos when coding
-Eric- 
+Eric- I need to improve my research before deciding to embark on a task, because a lack of research definitely had a negative
+effect on me during this sprint.
 Joel- I can create a schedule and dedicate an hour or more on days I know I can work on our code. I also need to push code
 more consistently.
 Michael- I need to start testing on a larger scale to find edge cases
