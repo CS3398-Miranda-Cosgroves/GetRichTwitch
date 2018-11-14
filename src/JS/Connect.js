@@ -16,7 +16,8 @@ var ptsObj = [];
 var coinObj = [];
 var hugsObj = [];
 var discObj = [];
-var session_playlist_id = 'PL6ndaQfhrP0GbGU1J785MG1dGUrRjROSp'; //Holds playlist ID for this session
+var session_playlist_id = ''; //Holds playlist ID for this session
+var IRCCONNECT = false;
 
 /**Initialize GoogleAuth2 before connecting
 */
@@ -28,23 +29,22 @@ var TOKEN_DIR = (process.env.HOME || process.env.HOMEPATH ||
     process.env.USERPROFILE) + '/.credentials/';
 var TOKEN_PATH = TOKEN_DIR + 'google-apis-nodejs-quickstart.json';
 
-// Load client secrets from a local file.
-fs.readFile('src/JSON/client_secret.json', function processClientSecrets(err, content) {
-    if (err) {
-        console.log('Error loading client secret file: ' + err);
-        return;
-    }
-    // Authorize a client with the loaded credentials, then call the YouTube API.
-    //See full code sample for authorize() function code.
-    authorize(JSON.parse(content), {'params': {'part': 'snippet,status',
-            'onBehalfOfContentOwner': ''}, 'properties': {'snippet.title': 'STREAM ' + datetime.toString(),
-            'snippet.description': '',
-            'snippet.tags[]': '',
-            'snippet.defaultLanguage': '',
-            'status.privacyStatus': ''
-        }}, playlistsInsert);
-});
-
+// // Load client secrets from a local file.
+// fs.readFile('src/JSON/client_secret.json', function processClientSecrets(err, content) {
+//     if (err) {
+//         console.log('Error loading client secret file: ' + err);
+//         return;
+//     }
+//     // Authorize a client with the loaded credentials, then call the YouTube API.
+//     //See full code sample for authorize() function code.
+//     authorize(JSON.parse(content), {'params': {'part': 'snippet,status',
+//             'onBehalfOfContentOwner': ''}, 'properties': {'snippet.title': 'STREAM ' + datetime.toString(),
+//             'snippet.description': '',
+//             'snippet.tags[]': '',
+//             'snippet.defaultLanguage': '',
+//             'status.privacyStatus': ''
+//         }}, playlistsInsert);
+// });
 
 // Valid commands start with:
 let commandPrefix = '!';
@@ -60,7 +60,7 @@ let opts = {
 }
 
 // These are the commands the bot knows (defined below):
-let knownCommands = { echo, haiku, doom, givepts, slap, coinflip, hug, showHugs, discipline, gamble, purge, commands, clear, playvideo, showpts, trade, stats} //add new commands to this list
+let knownCommands = { echo, haiku, doom, givepts, slap, coinflip, hug, showHugs, discipline, gamble, purge, commands, clear, showpts, trade, stats} //add new commands to this list
 
 // Create a client with our options:
 let client = new tmi.client(opts)
@@ -70,7 +70,9 @@ client.on('message', onMessageHandler)
 client.on("subscription", onSubHandler)
 client.on('connected', onConnectedHandler)
 client.on('disconnected', onDisconnectedHandler)
-var IRCCONNECT = false;
+
+connectIRC();
+
 // Connect to Twitch:
 function connectIRC(){
     client.connect()
