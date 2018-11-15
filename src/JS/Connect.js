@@ -16,12 +16,12 @@ var ptsObj = [];
 var coinObj = [];
 var hugsObj = [];
 var discObj = [];
-var session_playlist_id = ''; //Holds playlist ID for this session
+var session_playlist_id = 'PL6ndaQfhrP0EE13pakmqBNoqAEfgVoc0d'; //Holds playlist ID for this session
 let VIDEO_ALLOWED = false;
 
 // If modifying these scopes, delete your previously saved credentials
 // at ~/.credentials/google-apis-nodejs-quickstart.json
-var SCOPES = ['https://www.googleapis.com/auth/youtube.force-ssl']
+var SCOPES = ['https://www.googleapis.com/auth/youtube.force-ssl'];
 var TOKEN_DIR = (process.env.HOME || process.env.HOMEPATH ||
     process.env.USERPROFILE) + '/.credentials/';
 var TOKEN_PATH = TOKEN_DIR + 'google-apis-nodejs-quickstart.json';
@@ -37,22 +37,22 @@ let opts = {
         password: 'oauth:' + 'l8ec68snfdwehzsug2ekcoaza7hvkn'
     },
     channels: [
-        'MirandaCosgroveBot'
+        'Griffster'
     ]
 };
 
 // These are the commands the bot knows (defined below):
 let knownCommands = { echo, haiku, doom, givepts, slap, coinflip, hug, showHugs, discipline, gamble, purge, commands,
-    clear, showpts, trade, stats, requestsong, allowrequests, blockrequests} //add new commands to this list
+    clear, showpts, trade, stats, requestsong, allowrequests, blockrequests}; //add new commands to this list
 
 // Create a client with our options:
-let client = new tmi.client(opts)
+let client = new tmi.client(opts);
 
 // Register our event handlers (defined below):
-client.on('message', onMessageHandler)
-client.on("subscription", onSubHandler)
-client.on('connected', onConnectedHandler)
-client.on('disconnected', onDisconnectedHandler)
+client.on('message', onMessageHandler);
+client.on("subscription", onSubHandler);
+client.on('connected', onConnectedHandler);
+client.on('disconnected', onDisconnectedHandler);
 
 initAuth();
 
@@ -441,7 +441,8 @@ function sendMessage (target, context, message) {
 //Bans and then unbans user to purge their messages from chat
 function purge(target, context, purgedUser)
 {
-    if(context['mod'] === true) {
+    let badge = context['badges-raw'].split(",")[0];
+    if(context['mod'] === true || badge === "broadcaster/1"){
         if (purgedUser.toString().length > 2) {
             client.say(target, "/timeout " + purgedUser + " 1");
             client.say(target, "Not just the " + purgedUser + " but the women and children too...");
@@ -461,7 +462,8 @@ function purge(target, context, purgedUser)
 
 function clear(target, context)
 {
-    if(context['mod'] === true) {
+    let badge = context['badges-raw'].split(",")[0];
+    if(context['mod'] === true || badge === "broadcaster/1") {
         client.say(target, "/clear")
         client.say(target, "Alright ya'll gettin' a little too nasty.")
     }
@@ -521,7 +523,8 @@ function requestsong(target, context, videoID) {
 function allowrequests(target, context)
 {
     //only allow mods to turn requests on
-    if(context['mod'] === true) {
+    let badge = context['badges-raw'].split(",")[0];
+    if(context['mod'] === true || badge === "broadcaster/1") {
         VIDEO_ALLOWED = true;
         //If playlist does not exist yet make a new one with name STREAM + time
         if (session_playlist_id === '') {
@@ -563,7 +566,8 @@ function allowrequests(target, context)
  */
 function blockrequests(target, context)
 {
-    if(context['mod'] === true) {
+    let badge = context['badges-raw'].split(",")[0];
+    if(context['mod'] === true || badge === "broadcaster/1") {
         VIDEO_ALLOWED = false;
     }
     else
@@ -770,8 +774,6 @@ function playlistItemInsertNow(id, target)
  * Once auth key is saved connect to chat and listen for exit command
  */
 function initAuth() {
-    //Monitor console input
-
     let credentials;
     fs.readFile('src/JSON/client_secret.json', function processClientSecrets(err, content) {
         if (err) {
