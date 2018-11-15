@@ -37,7 +37,7 @@ let opts = {
         password: 'oauth:' + 'l8ec68snfdwehzsug2ekcoaza7hvkn'
     },
     channels: [
-        'MirandaCosgroveBot'
+        'Griffster'
     ]
 };
 
