@@ -563,7 +563,13 @@ function allowrequests(target, context)
  */
 function blockrequests(target, context)
 {
-    VIDEO_ALLOWED = false;
+    if(context['mod'] === true) {
+        VIDEO_ALLOWED = false;
+    }
+    else
+    {
+        client.say(target, "@" + context.username + " Only moderators can use this command");
+    }
 }
 
 /**
