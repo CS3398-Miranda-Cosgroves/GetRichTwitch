@@ -17,10 +17,7 @@ var coinObj = [];
 var hugsObj = [];
 var discObj = [];
 var session_playlist_id = ''; //Holds playlist ID for this session
-var IRCCONNECT = false;
-
-/**Initialize GoogleAuth2 before connecting
-*/
+let VIDEO_ALLOWED = false;
 
 // If modifying these scopes, delete your previously saved credentials
 // at ~/.credentials/google-apis-nodejs-quickstart.json
@@ -29,22 +26,7 @@ var TOKEN_DIR = (process.env.HOME || process.env.HOMEPATH ||
     process.env.USERPROFILE) + '/.credentials/';
 var TOKEN_PATH = TOKEN_DIR + 'google-apis-nodejs-quickstart.json';
 
-// // Load client secrets from a local file.
-// fs.readFile('src/JSON/client_secret.json', function processClientSecrets(err, content) {
-//     if (err) {
-//         console.log('Error loading client secret file: ' + err);
-//         return;
-//     }
-//     // Authorize a client with the loaded credentials, then call the YouTube API.
-//     //See full code sample for authorize() function code.
-//     authorize(JSON.parse(content), {'params': {'part': 'snippet,status',
-//             'onBehalfOfContentOwner': ''}, 'properties': {'snippet.title': 'STREAM ' + datetime.toString(),
-//             'snippet.description': '',
-//             'snippet.tags[]': '',
-//             'snippet.defaultLanguage': '',
-//             'status.privacyStatus': ''
-//         }}, playlistsInsert);
-// });
+
 
 // Valid commands start with:
 let commandPrefix = '!';
@@ -57,10 +39,11 @@ let opts = {
     channels: [
         'MirandaCosgroveBot'
     ]
-}
+};
 
 // These are the commands the bot knows (defined below):
-let knownCommands = { echo, haiku, doom, givepts, slap, coinflip, hug, showHugs, discipline, gamble, purge, commands, clear, showpts, trade, stats} //add new commands to this list
+let knownCommands = { echo, haiku, doom, givepts, slap, coinflip, hug, showHugs, discipline, gamble, purge, commands,
+    clear, showpts, trade, stats, requestsong, allowrequests, blockrequests} //add new commands to this list
 
 // Create a client with our options:
 let client = new tmi.client(opts)
@@ -71,12 +54,26 @@ client.on("subscription", onSubHandler)
 client.on('connected', onConnectedHandler)
 client.on('disconnected', onDisconnectedHandler)
 
-connectIRC();
+initAuth();
 
 // Connect to Twitch:
 function connectIRC(){
     client.connect()
-    IRCCONNECT = true;
+}
+
+function exitListen()
+{
+    var stdin = process.openStdin();
+
+    stdin.addListener("data", function (d) {
+        // note:  d is an object, and when converted to a string it will
+        // end with a linefeed.  so we (rather crudely) account for that
+        // with toString() and then trim()
+        if(d.toString().trim() == "exit")
+        {
+            process.exit();
+        }
+    });
 }
 
 // Called every time a message comes in:
@@ -477,35 +474,103 @@ function clear(target, context)
 function commands(target, context)
 {
     var cmdStrings = [];
+
     for(var commandName in knownCommands)
         cmdStrings[cmdStrings.length] = " !" + commandName.toString() + " ";
-    client.say(target, "Commands known:" + cmdStrings)
+
+    client.say(target, "@" + context.username + " Commands known:" + cmdStrings);
 }
 
-function handleClientLoad() {
-    gapi.load('client:auth2', initClient);
-}
-
-function playvideo(target, context, videoID) {
-    let ID = getVideoId(videoID.toString());
-    let requestinfo = {SongID : ID, Name : context['username'], UserID : context['user-id']};
-    console.log(requestinfo);
-    let data = JSON.stringify(requestinfo, null, 2);
-    fs.writeFile('src/JSON/song-request-update.json', data, 'utf8', function(err) {
-            if (err) throw err;
-            console.log('complete');
-        });
-
-    console.log("Playlist ID: " + session_playlist_id);
-    playlistItemInsertNow(ID['id'], target);
-}
-
-
-
-function playlistsInsert(auth, requestData) {
-    if(!IRCCONNECT){
-        connectIRC();
+// function handleClientLoad() {
+//     gapi.load('client:auth2', initClient);
+// }
+/**
+ * Add song to request queue if song requests have been activated
+ * @param target - channel info
+ * @param context - user info
+ * @param videoID - String of requested URL
+ */
+function requestsong(target, context, videoID) {
+    if(VIDEO_ALLOWED === true) {
+        let ID = getVideoId(videoID.toString());
+        console.log(ID);
+        if(Object.keys(ID).length === 0 && ID.constructor === Object) {
+            client.say(target, "@" + context.username + " That ID is not a valid youtube URL")
+        }
+        else
+        {
+            let requestinfo = {SongID: ID, Name: context['username'], UserID: context['user-id']};
+            let data = JSON.stringify(requestinfo, null, 2);
+            fs.writeFile('src/JSON/song-request-update.json', data, 'utf8', function (err) {
+                if (err) throw err;
+                console.log('complete');
+            });
+            console.log("Playlist ID: " + session_playlist_id);
+            playlistItemInsertNow(ID['id'], target);
+        }
     }
+    else
+    {
+        client.say(target, "Song requests are not currently allowed");
+    }
+}
+
+/**
+ *Turns on song request functionality for all users, only usable by moderators
+ */
+function allowrequests(target, context)
+{
+    //only allow mods to turn requests on
+    if(context['mod'] === true) {
+        VIDEO_ALLOWED = true;
+        //If playlist does not exist yet make a new one with name STREAM + time
+        if (session_playlist_id === '') {
+            fs.readFile('src/JSON/client_secret.json', function processClientSecrets(err, content) {
+                if (err) {
+                    console.log('Error loading client secret file: ' + err);
+                    return;
+                }
+                console.log("Playlist does not exist, creating new playlist");
+                // Authorize a client with the loaded credentials, then call the YouTube API to create a playlist
+                authorize(JSON.parse(content), {
+                    'params': {
+                        'part': 'snippet,status',
+                        'onBehalfOfContentOwner': ''
+                    }, 'properties': {
+                        'snippet.title': 'STREAM ' + datetime.toString(),
+                        'snippet.description': '',
+                        'snippet.tags[]': '',
+                        'snippet.defaultLanguage': '',
+                        'status.privacyStatus': ''
+                    }
+                }, playlistsInsert);
+            });
+        }
+        else
+        {
+            console.log("Playlist already exists - ID is " + session_playlist_id);
+        }
+    }
+    else{
+        client.say(target, "Command !allowrequests is only available to moderators");
+    }
+
+}
+
+/**
+ * Block playlist requests by turning the boolean to false, should be checked in requestsong function
+ * and block any more videos going into the queue or creation of a playlist
+ */
+function blockrequests(target, context)
+{
+    VIDEO_ALLOWED = false;
+}
+
+/**
+ * Adds a new playlist to insert data into using the requestData to get channel and playlist ID
+ * Also sets session playlist ID
+ */
+function playlistsInsert(auth, requestData) {
     var service = google.youtube('v3');
     var parameters = removeEmptyParameters(requestData['params']);
     parameters['auth'] = auth;
@@ -533,7 +598,8 @@ function authorize(credentials, requestData, callback) {
     // Check if we have previously stored a token.
     fs.readFile(TOKEN_PATH, function(err, token) {
         if (err) {
-            getNewToken(oauth2Client, requestData, callback);
+            getNewToken(oauth2Client);
+            console.log("New token had to be authorized, command not processed");
         } else {
             oauth2Client.credentials = JSON.parse(token);
             callback(oauth2Client, requestData);
@@ -545,7 +611,7 @@ function authorize(credentials, requestData, callback) {
  * Get and store new token after prompting for user authorization, and then
  * execute the given callback with the authorized OAuth2 client.
  */
-function getNewToken(oauth2Client, requestData, callback) {
+function getNewToken(oauth2Client) {
     var authUrl = oauth2Client.generateAuthUrl({
         access_type: 'offline',
         scope: SCOPES
@@ -564,7 +630,6 @@ function getNewToken(oauth2Client, requestData, callback) {
             }
             oauth2Client.credentials = token;
             storeToken(token);
-            callback(oauth2Client, requestData);
         });
     });
 }
@@ -583,6 +648,7 @@ function storeToken(token) {
     fs.writeFileSync(TOKEN_PATH, JSON.stringify(token));
     console.log('Token stored to ' + TOKEN_PATH);
     connectIRC();
+    exitListen();
 }
 
 /**
@@ -640,6 +706,9 @@ function stats(target, context) {
 	client.say(target, "Your badges are: " + context['badges-raw']);
 }
 
+/**
+ * Insert playlist item into playlist, both given in requestData from calling function
+ */
 function playlistItemsInsert(auth, requestData) {
     var service = google.youtube('v3');
     var parameters = removeEmptyParameters(requestData['params']);
@@ -654,9 +723,12 @@ function playlistItemsInsert(auth, requestData) {
 
 }
 
+/**
+ * Parent function for playlist requests, gets video ID and sets up playlist ID to add to and passes it to
+ * the insert function
+ */
 function playlistItemInsertNow(id, target)
 {
-
 // Load client secrets from a local file.
     fs.readFile('src/JSON/client_secret.json', function processClientSecrets(err, content) {
         if (err) {
@@ -687,7 +759,36 @@ function playlistItemInsertNow(id, target)
 }
 
 
+/**
+ * Start google auth process, ask for new AuthKey if it is not saved
+ * Once auth key is saved connect to chat and listen for exit command
+ */
+function initAuth() {
+    //Monitor console input
 
+    let credentials;
+    fs.readFile('src/JSON/client_secret.json', function processClientSecrets(err, content) {
+        if (err) {
+            console.log('Error loading client secret file: ' + err);
+            return;
+        }
+        credentials = JSON.parse(content);
+        var clientSecret = credentials.installed.client_secret;
+        var clientId = credentials.installed.client_id;
+        var redirectUrl = credentials.installed.redirect_uris[0];
+        var oauth2Client = new OAuth2Client(clientId, clientSecret, redirectUrl);
+        // Check if we have previously stored a token.
+        fs.readFile(TOKEN_PATH, function(err, token) {
+            if (err) {
+                getNewToken(oauth2Client);
+            } else {
+                oauth2Client.credentials = JSON.parse(token);
+                connectIRC();
+                exitListen();
+            }
+        });
+    });
+}
 
 
 
