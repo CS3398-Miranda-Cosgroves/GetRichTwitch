@@ -492,22 +492,15 @@ function commands(target, context)
 function requestsong(target, context, videoID) {
     if(VIDEO_ALLOWED === true) {
         let ID = getVideoId(videoID.toString());
-        console.log(ID);
         if(Object.keys(ID).length === 0 && ID.constructor === Object) {
-            client.say(target, "@" + context.username + " That ID is not a valid youtube URL")
+            console.log(videoID);
+            playlistItemTimeCheck(videoID, target);
         }
-        else
-        {
-            let requestinfo = {SongID: ID, Name: context['username'], UserID: context['user-id']};
-            let data = JSON.stringify(requestinfo, null, 2);
-            fs.writeFile('src/JSON/song-request-update.json', data, 'utf8', function (err) {
-                if (err) throw err;
-                console.log('complete');
-            });
-            console.log("Playlist ID: " + session_playlist_id);
-            playlistItemInsertNow(ID['id'], target);
+        else {
+            console.log("Playlist ID to add to: " + session_playlist_id);
+            playlistItemTimeCheck(ID['id'], target);
         }
-    }
+        }
     else
     {
         client.say(target, "Song requests are not currently allowed, get a moderator to use !allowrequests");
@@ -527,7 +520,7 @@ function allowrequests(target, context)
         fs.readFile('src/JSON/most_recent_playlist.json', function(err, data){
             if(err)
             {//If you get an error on the read, create a new playlist and overwrite previous file
-                console.log(err + "\nError fetching playlist, discarding data in most_recent_playlist.json");
+                console.log(err + "\nError fetching playlist, creating new most_recent_playlist.json");
                 fs.readFile('src/JSON/client_secret.json', function processClientSecrets(err, content) {
                     if (err) {
                         console.log('Error loading client secret file: ' + err);
@@ -782,7 +775,7 @@ function playlistItemsInsert(auth, requestData) {
  * Parent function for playlist requests, gets video ID and sets up playlist ID to add to and passes it to
  * the insert function
  */
-function playlistItemInsertNow(id, target)
+function playlistItemTimeCheck(id, target)
 {
 // Load client secrets from a local file.
     fs.readFile('src/JSON/client_secret.json', function processClientSecrets(err, content) {
@@ -790,25 +783,35 @@ function playlistItemInsertNow(id, target)
             console.log('Error loading client secret file: ' + err);
             return;
         }
-        console.log(id);
-
+        try
+        {
         fetchVideoInfo(id).then(function (videoInfo) {
-            if(videoInfo.duration < 400)
-            {
-                authorize(JSON.parse(content), {'params': {'part': 'snippet',
-                        'onBehalfOfContentOwner': ''}, 'properties': {'snippet.playlistId': session_playlist_id,
+            if(videoInfo.duration < 400) {// Authorize a client with the loaded credentials, then call the YouTube API.
+                authorize(JSON.parse(content), {
+                    'params': {
+                        'part': 'snippet',
+                        'onBehalfOfContentOwner': ''
+                    }, 'properties': {
+                        'snippet.playlistId': session_playlist_id,
                         'snippet.resourceId.kind': 'youtube#video',
                         'snippet.resourceId.videoId': id,
                         'snippet.position': ''
-                    }}, playlistItemsInsert);
+                    }
+                }, playlistItemsInsert);
                 client.say(target, videoInfo.title + " has been added to the request queue");
             }
-            else
-            {
+            else {
                 client.say(target, "Hey jabroni your video is too long");
-            }
-        });
-        // Authorize a client with the loaded credentials, then call the YouTube API.
+                }
+            });
+        }
+        catch
+        {
+            console.log(err);
+            console.log("Error fetching youtube ID");
+            client.say(target, "That is not a valid youtube URL or video ID");
+        }
+
 
     });
 }
