@@ -44,7 +44,7 @@ let opts = {
 
 // These are the commands the bot knows (defined below):
 let knownCommands = { echo, haiku, doom, givepts, slap, coinflip, hug, showHugs, discipline, gamble, purge, commands,
-    clear, showpts, trade, stats, requestsong, allowrequests, blockrequests, blacklist}; //add new commands to this list
+    clear, showpts, trade, stats, requestsong, allowrequests, blockrequests}; //add new commands to this list
 
 // Create a client with our options:
 let client = new tmi.client(opts);
