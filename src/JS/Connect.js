@@ -16,6 +16,7 @@ var ptsObj = [];
 var coinObj = [];
 var hugsObj = [];
 var discObj = [];
+let black_list = [];
 var session_playlist_id = ''; //Holds playlist ID for this session
 let VIDEO_ALLOWED = false;
 
@@ -43,7 +44,7 @@ let opts = {
 
 // These are the commands the bot knows (defined below):
 let knownCommands = { echo, haiku, doom, givepts, slap, coinflip, hug, showHugs, discipline, gamble, purge, commands,
-    clear, showpts, trade, stats, requestsong, allowrequests, blockrequests}; //add new commands to this list
+    clear, showpts, trade, stats, requestsong, allowrequests, blockrequests, blacklist}; //add new commands to this list
 
 // Create a client with our options:
 let client = new tmi.client(opts);
@@ -71,6 +72,9 @@ function exitListen()
         // with toString() and then trim()
         if(d.toString().trim() == "exit")
         {
+            /*
+            INSERT CODE TO STORE DATA YOU WANT TO KEEP BETWEEN SESSIONS HERE
+             */
             process.exit();
         }
     });
@@ -195,37 +199,37 @@ function showHugs(target, context) {
             break;
         }
         i++;
-    }    
+    }
 }
 
 //Function called when the "discipline command is issued:
 //Function created by Eric Ross
 function discipline(target, context, disciplinee) {
-	    var viewer = context.username;
-	    //console.log(viewer);
-	    var discs = 1;
+    var viewer = context.username;
+    //console.log(viewer);
+    var discs = 1;
 
-	    var i = 0;
-	    while (i <= viewerObj.length) {
-	        if (viewerObj[i] == viewer) {
-	            discObj[i] += discs;
-	            hugsObj[i] -= discs;
-	            console.log(viewer + " is already in array");
-	            console.log(discObj[i]);
-	            break;
-	        }
-	        else if (i == viewerObj.length) {
-	            viewerObj.push(viewer);
-	            discObj.push(discs);
-	            hugsObj[i] -= discs;
-	            console.log(viewer + " has been added to array");
-	            console.log(discObj[i]);
-	            break;
-	        }
-	        i++;
-	    }
+    var i = 0;
+    while (i <= viewerObj.length) {
+        if (viewerObj[i] == viewer) {
+            discObj[i] += discs;
+            hugsObj[i] -= discs;
+            console.log(viewer + " is already in array");
+            console.log(discObj[i]);
+            break;
+        }
+        else if (i == viewerObj.length) {
+            viewerObj.push(viewer);
+            discObj.push(discs);
+            hugsObj[i] -= discs;
+            console.log(viewer + " has been added to array");
+            console.log(discObj[i]);
+            break;
+        }
+        i++;
+    }
 
-	   	sendMessage(target, context, context.username + ' has ' + ' been disciplined!');
+    sendMessage(target, context, context.username + ' has ' + ' been disciplined!');
 }
 
 
@@ -492,15 +496,22 @@ function commands(target, context)
 function requestsong(target, context, videoID) {
     if(VIDEO_ALLOWED === true) {
         let ID = getVideoId(videoID.toString());
+        console.log(ID);
         if(Object.keys(ID).length === 0 && ID.constructor === Object) {
-            console.log(videoID);
-            playlistItemTimeCheck(videoID, target);
+            client.say(target, "@" + context.username + " That ID is not a valid youtube URL")
         }
-        else {
-            console.log("Playlist ID to add to: " + session_playlist_id);
-            playlistItemTimeCheck(ID['id'], target);
+        else
+        {
+            let requestinfo = {SongID: ID, Name: context['username'], UserID: context['user-id']};
+            let data = JSON.stringify(requestinfo, null, 2);
+            fs.writeFile('src/JSON/song-request-update.json', data, 'utf8', function (err) {
+                if (err) throw err;
+                console.log('complete');
+            });
+            console.log("Playlist ID: " + session_playlist_id);
+            playlistItemInsertNow(ID['id'], target);
         }
-        }
+    }
     else
     {
         client.say(target, "Song requests are not currently allowed, get a moderator to use !allowrequests");
@@ -514,80 +525,80 @@ function allowrequests(target, context)
 {
     //only allow mods to turn requests on
     let badge = context['badges-raw'].split(",")[0];
-    if(context['mod'] === true || badge === "broadcaster/1") {
-        VIDEO_ALLOWED = true;
-        //Check if there is a playlist less than 24hrs old, if so then use that one to prevent playlist pollution
-        fs.readFile('src/JSON/most_recent_playlist.json', function(err, data){
-            if(err)
-            {//If you get an error on the read, create a new playlist and overwrite previous file
-                console.log(err + "\nError fetching playlist, creating new most_recent_playlist.json");
-                fs.readFile('src/JSON/client_secret.json', function processClientSecrets(err, content) {
-                    if (err) {
-                        console.log('Error loading client secret file: ' + err);
-                        return;
-                    }
+    if(context['mod'] === true || badge === "broadcaster/1")
+    {
+        if(session_playlist_id == '')
+        {
+            fs.readFile('src/JSON/most_recent_playlist.json', function (err, data)
+            {
+                if (err)
+                {//If you get an error on the read, create a new playlist and overwrite previous file
+                    console.log(err + "\nError fetching playlist, discarding data in most_recent_playlist.json");
+                    fs.readFile('src/JSON/client_secret.json', function processClientSecrets(err, content) {
+                        if (err) {
+                            console.log('Error loading client secret file: ' + err);
+                            return;
+                        }
+                        console.log("Playlist does not exist, creating new playlist");
+                        // Authorize a client with the loaded credentials, then call the YouTube API to create a playlist
+                        authorize(JSON.parse(content), {
+                            'params': {
+                                'part': 'snippet,status',
+                                'onBehalfOfContentOwner': ''
+                            }, 'properties': {
+                                'snippet.title': 'STREAM ' + datetime.toString(),
+                                'snippet.description': '',
+                                'snippet.tags[]': '',
+                                'snippet.defaultLanguage': '',
+                                'status.privacyStatus': ''
+                            }
+                        }, playlistsInsert);
+                    });
+                    return;
+                }
+                //Otherwise check time to see if a recent playlist exists, otherwise create a new one and overwrite file
+                data = (data.toString()).split(' ');
+                let time_created = parseInt(data[1], 10);
+                let last_ID = data[0];
+                let current_time = datetime.getTime();
+                console.log(last_ID);
+                if ((current_time - time_created) < 86700000)
+                {
+                    console.log("Playlist from within 24 hours found, grabbing playlist ID: " + last_ID);
+                    session_playlist_id = last_ID;
+                }
+                else{
                     console.log("Playlist does not exist, creating new playlist");
                     // Authorize a client with the loaded credentials, then call the YouTube API to create a playlist
-                    authorize(JSON.parse(content), {
-                        'params': {
-                            'part': 'snippet,status',
-                            'onBehalfOfContentOwner': ''
-                        }, 'properties': {
-                            'snippet.title': 'STREAM ' + datetime.toString(),
-                            'snippet.description': '',
-                            'snippet.tags[]': '',
-                            'snippet.defaultLanguage': '',
-                            'status.privacyStatus': ''
+                    fs.readFile('src/JSON/client_secret.json', function processClientSecrets(err, content) {
+                        if (err) {
+                            console.log('Error loading client secret file: ' + err);
+                            return;
                         }
-                    }, playlistsInsert);
-                });
-                return;
-            }
-            //Otherwise check time to see if a recent playlist exists, otherwise create a new one and overwrite file
-            data = (data.toString()).split(' ');
-            let time_created = parseInt(data[1], 10);
-            let last_ID = data[0];
-            if((datetime.getTime() - time_created) < 86700000)
-            {
-                console.log("Playlist from within 24 hours found, grabbing playlist ID: " + last_ID);
-                session_playlist_id = last_ID;
-            }
-            else if(session_playlist_id === '')
-            {
-                fs.readFileSync('src/JSON/client_secret.json', function processClientSecrets(err, content) {
-                    if (err) {
-                        console.log('Error loading client secret file: ' + err);
-                        return;
-                    }
-                    console.log("Playlist does not exist, creating new playlist");
-                    // Authorize a client with the loaded credentials, then call the YouTube API to create a playlist
-                    authorize(JSON.parse(content), {
-                        'params': {
-                            'part': 'snippet,status',
-                            'onBehalfOfContentOwner': ''
-                        }, 'properties': {
-                            'snippet.title': 'STREAM ' + datetime.toString(),
-                            'snippet.description': '',
-                            'snippet.tags[]': '',
-                            'snippet.defaultLanguage': '',
-                            'status.privacyStatus': ''
-                        }
-                    }, playlistsInsert);
-                });
-            }
-            else
-            {
-                console.log("Playlist already exists - ID is " + session_playlist_id);
-            }
-        });
-        //If playlist does not exist yet make a new one with name STREAM + time
-        if (session_playlist_id === '') {
-
-
+                        authorize(JSON.parse(content), {
+                            'params': {
+                                'part': 'snippet,status',
+                                'onBehalfOfContentOwner': ''
+                            }, 'properties': {
+                                'snippet.title': 'STREAM ' + datetime.toString(),
+                                'snippet.description': '',
+                                'snippet.tags[]': '',
+                                'snippet.defaultLanguage': '',
+                                'status.privacyStatus': ''
+                            }
+                        }, playlistsInsert);
+                    });
+                }
+                VIDEO_ALLOWED = true;
+            });
+        }
+        else
+        {
+            VIDEO_ALLOWED = true;
         }
 
     }
-    else{
+    else {
         client.say(target, "Command !allowrequests is only available to moderators");
     }
 
@@ -608,6 +619,13 @@ function blockrequests(target, context)
         client.say(target, "@" + context.username + " Only moderators can use this command");
     }
 }
+
+/**
+ *Deletes playlist item currently playing
+ */
+
+
+
 
 /**
  * Adds a new playlist to insert data into using the requestData to get channel and playlist ID
@@ -689,10 +707,10 @@ function storeToken(token) {
     try {
         fs.mkdirSync(TOKEN_DIR);
     } catch (err) {
-        if (err.code != 'EEXIST') {
+        if (err.code != 'EEXIST')
             throw err;
-        }
     }
+
     fs.writeFileSync(TOKEN_PATH, JSON.stringify(token));
     console.log('Token stored to ' + TOKEN_PATH);
     connectIRC();
@@ -747,11 +765,11 @@ function createResource(properties) {
 }
 
 function stats(target, context) {
-	client.say(target, context['display-name'] + " Here's your status")
-	if (context['mod'] === true) {
-		client.say(target, context['display-name'] + " is a mod")
-	}
-	client.say(target, "Your badges are: " + context['badges-raw']);
+    client.say(target, context['display-name'] + " Here's your status")
+    if (context['mod'] === true) {
+        client.say(target, context['display-name'] + " is a mod")
+    }
+    client.say(target, "Your badges are: " + context['badges-raw']);
 }
 
 /**
@@ -775,7 +793,7 @@ function playlistItemsInsert(auth, requestData) {
  * Parent function for playlist requests, gets video ID and sets up playlist ID to add to and passes it to
  * the insert function
  */
-function playlistItemTimeCheck(id, target)
+function playlistItemInsertNow(id, target)
 {
 // Load client secrets from a local file.
     fs.readFile('src/JSON/client_secret.json', function processClientSecrets(err, content) {
@@ -783,37 +801,45 @@ function playlistItemTimeCheck(id, target)
             console.log('Error loading client secret file: ' + err);
             return;
         }
-        try
-        {
+        console.log(id);
+
         fetchVideoInfo(id).then(function (videoInfo) {
-            if(videoInfo.duration < 400) {// Authorize a client with the loaded credentials, then call the YouTube API.
-                authorize(JSON.parse(content), {
-                    'params': {
-                        'part': 'snippet',
-                        'onBehalfOfContentOwner': ''
-                    }, 'properties': {
-                        'snippet.playlistId': session_playlist_id,
+            if(videoInfo.duration < 400)
+            {
+                authorize(JSON.parse(content), {'params': {'part': 'snippet',
+                        'onBehalfOfContentOwner': ''}, 'properties': {'snippet.playlistId': session_playlist_id,
                         'snippet.resourceId.kind': 'youtube#video',
                         'snippet.resourceId.videoId': id,
                         'snippet.position': ''
-                    }
-                }, playlistItemsInsert);
+                    }}, playlistItemsInsert);
                 client.say(target, videoInfo.title + " has been added to the request queue");
             }
-            else {
+            else
+            {
                 client.say(target, "Hey jabroni your video is too long");
-                }
-            });
-        }
-        catch
-        {
-            console.log(err);
-            console.log("Error fetching youtube ID");
-            client.say(target, "That is not a valid youtube URL or video ID");
-        }
-
+            }
+        });
+        // Authorize a client with the loaded credentials, then call the YouTube API.
 
     });
+}
+
+function playlistItemsDelete(auth, requestData) {
+    var service = google.youtube('v3');
+    var parameters = removeEmptyParameters(requestData['params']);
+    parameters['auth'] = auth;
+    service.playlistItems.delete(parameters, function(err, response) {
+        if (err) {
+            console.log('The API returned an error: ' + err);
+            return;
+        }
+        console.log(response);
+    });
+}
+
+function blacklist(target, context, videoID)
+{
+
 }
 
 
