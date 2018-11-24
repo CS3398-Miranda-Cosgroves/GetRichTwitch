@@ -205,31 +205,27 @@ function showHugs(target, context) {
 //Function called when the "discipline command is issued:
 //Function created by Eric Ross
 function discipline(target, context, disciplinee) {
-    var viewer = context.username;
-    //console.log(viewer);
-    var discs = 1;
+	    var viewer = context.username;
+	    //console.log(viewer);
+	    var discs = 1;
 
-    var i = 0;
-    while (i <= viewerObj.length) {
-        if (viewerObj[i] == viewer) {
-            discObj[i] += discs;
-            hugsObj[i] -= discs;
-            console.log(viewer + " is already in array");
-            console.log(discObj[i]);
-            break;
-        }
-        else if (i == viewerObj.length) {
-            viewerObj.push(viewer);
-            discObj.push(discs);
-            hugsObj[i] -= discs;
-            console.log(viewer + " has been added to array");
-            console.log(discObj[i]);
-            break;
-        }
-        i++;
-    }
-
-    sendMessage(target, context, context.username + ' has ' + ' been disciplined!');
+	    var i = 0;
+	    while (i <= viewerObj.length) {
+	        if (viewerObj[i] == viewer) {
+	            discObj[i] += discs;
+	            hugsObj[i] -= discs;
+	    	   	sendMessage(target, context, context.username + ' has ' + ' been disciplined!');
+	            console.log(viewer + " is already in array");
+	            console.log(discObj[i]);
+	            break;
+	        }
+	        else if (i == viewerObj.length) {
+	            console.log(viewer + " is not in array");
+	            sendMessage(target, context, context.username + ' was given a stern talking to.');
+	            break;
+	        }
+	        i++;
+	    }
 }
 
 
