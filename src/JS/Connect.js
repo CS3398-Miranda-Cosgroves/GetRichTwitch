@@ -405,17 +405,19 @@ function trade(target, context) {
     var i = 0;
     while (i <= viewerObj.length) {
         if (viewerObj[i] == viewer) {
-            if(ptsObj[i] >= 100) {
-                ptsObj[i] -= 100;
-                coinObj[i] += 10;
-            }
-            else if(ptsObj[i] >= 50) {
-                ptsObj[i] -= 50;
-                coinObj[i] += 5;
-            }
-            else if(ptsObj[i] >= 10) {
-                ptsObj[i] -= 10;
-                coinObj[i] += 1;
+            while(ptsObj[i] >= 10) {
+                if(ptsObj[i] >= 100) {
+                    ptsObj[i] -= 100;
+                    coinObj[i] += 10;
+                }
+                else if(ptsObj[i] >= 50) {
+                    ptsObj[i] -= 50;
+                    coinObj[i] += 5;
+                }
+                else if(ptsObj[i] >= 10) {
+                    ptsObj[i] -= 10;
+                    coinObj[i] += 1;
+                }
             }
             sendMessage(target, context, context.username + ' has ' + ptsObj[i] + ' total  points and ' + coinObj[i] + ' total coins now!');
             break;
@@ -428,7 +430,6 @@ function trade(target, context) {
         i++;
     }
 }
-
 
 // Helper function to send the correct type of message:
 // Know that Commands do not run in Whisper
