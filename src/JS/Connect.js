@@ -66,7 +66,7 @@ function exitListen()
 {
     var stdin = process.openStdin();
 
-    stdin.addListener("data", function (d) {
+    stdin.addListener("terminal_input", function (d) {
         // note:  d is an object, and when converted to a string it will
         // end with a linefeed.  so we (rather crudely) account for that
         // with toString() and then trim()
@@ -782,6 +782,7 @@ function playlistItemsInsert(auth, requestData) {
     service.playlistItems.insert(parameters, function(err, response) {
         if (err) {
             console.log('The API returned an error: ' + err);
+            console.log('PLAYLIST ITEM REQUEST NOT PROCESSED');
             return;
         }
     });
