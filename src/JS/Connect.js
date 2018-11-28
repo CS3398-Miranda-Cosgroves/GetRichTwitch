@@ -44,7 +44,7 @@ let opts = {
 
 // These are the commands the bot knows (defined below):
 let knownCommands = { echo, haiku, doom, givepts, slap, coinflip, hug, showHugs, discipline, gamble, purge, commands,
-    clear, showpts, trade, stats, requestsong, allowrequests, blockrequests}; //add new commands to this list
+    clear, showpts, trade, stats, requestsong, allowrequests, blockrequests, shopMenu}; //add new commands to this list
 
 // Create a client with our options:
 let client = new tmi.client(opts);
@@ -109,7 +109,7 @@ function onMessageHandler (target, context, msg, self) {
     }
 }
 
-function onSubHandler (target, context) {
+function onSubHandler () {
     console.log(`/*/*/*/*/*Subscriber has been detected/*/*/*/*/*`)
 }
 
@@ -252,26 +252,28 @@ function gamble(target, context, params) {
     
                 // Prints gamble messages;
                 if (msg != 'tails' && msg != 'heads') {
-                    sendMessage(target, context, 'You did not enter either tails or heads loser...smh. Thank you for the points!!');
+                    sendMessage(target, context, 'You did not enter either tails or heads loser...smh.');
                     break;
                 }
                 else if (coin == 'tails' && coin == msg) {
-                    sendMessage(target, context, 'You bet on Tails and you won the bet (somehow). You won 10 coins');
+                    sendMessage(target, context, 'You bet on Tails and you won the bet (somehow). You won 20 coins');
                     coinObj[i] += 20;
                 }
                 else if (coin == 'heads' && coin == msg) {
-                    sendMessage(target, context, 'You bet on Heads and you won the bet (somehow). You won 10 coins');
+                    sendMessage(target, context, 'You bet on Heads and you won the bet (somehow). You won 20 coins');
                     coinObj[i] += 20;
                 }
                 else if (coin == 'tails' && coin != msg) {
-                    sendMessage(target, context, 'You bet on Heads and you lost the bet. You lost 10 coins..boohoo');
+                    sendMessage(target, context, 'You bet on Heads and you lost the bet. You lost 20 coins..boohoo');
+                    coinObj[i] -= 20;
                 }      
                 else if (coin == 'heads' && coin != msg) {
-                    sendMessage(target, context, 'You bet on Tails and you lost the bet. You lost 10 coins..boohoo');
+                    sendMessage(target, context, 'You bet on Tails and you lost the bet. You lost 20 coins..boohoo');
+                    coinObj[i] -= 20;
                 }
             }
             else if (coinObj[i] < 10) {
-                sendMessage(target, context, 'You need 10 coins to gamble atleast..')
+                sendMessage(target, context, 'You need at least 10 coins to gamble with.')
             }
 
         break;
@@ -352,7 +354,7 @@ function givepts(target, context) {
 
     var viewer = context.username;
     //console.log(viewer);
-    var pts = Math.floor((Math.random()+1 ) * 10);
+    var pts = Math.floor((Math.random()+1 ) * 50);
 
     var i = 0;
     while (i <= viewerObj.length) {
@@ -870,6 +872,19 @@ function initAuth() {
             }
         });
     });
+}
+
+function shopMenu(target)
+{
+    var cmdStrings = [];
+
+    client.say(target, "***WELCOME TO THE FUNCTION SHOP MENU***");
+
+    for(var commandName in knownCommands)
+        cmdStrings[cmdStrings.length] = "-!" + commandName.toString() + " = 5 coins";
+
+    for(i = 0; i < cmdStrings.length; i++)
+        client.say(target, cmdStrings[i]);
 }
 
 
