@@ -44,7 +44,7 @@ let opts = {
 
 // These are the commands the bot knows (defined below):
 let knownCommands = { echo, haiku, doom, givepts, slap, coinflip, hug, showHugs, discipline, gamble, purge, commands,
-    clear, showpts, trade, stats, requestsong, allowrequests, blockrequests, shopMenu}; //add new commands to this list
+    clear, showpts, trade, stats, requestsong, allowrequests, blockrequests, shopMenu, buyCommand}; //add new commands to this list
 
 // Create a client with our options:
 let client = new tmi.client(opts);
@@ -887,5 +887,25 @@ function shopMenu(target)
         client.say(target, cmdStrings[i]);
 }
 
+function buyCommand(target, context, commandToBuy)
+{
+    // If the command is known, let's execute it:
+    if (commandToBuy in knownCommands){
+        var viewer = context.username;
 
+        var i = 0;
+        while (i <= viewerObj.length)
+            if (viewerObj[i] == viewer){
+                if(coinObj[i] >= 5) {
+                    coinObj[i] -= 5;
+                    client.say(target, "WOW! You bought the " + commandToBuy + " command. Are you happy with yourself now?");
+                    /**Calls function that gives the user the permission to use purchased command*/
+                }
+            }
+            else {
+                client.say(target, "Haha you don't have enough coins to buy that command x)")
+                break;
+            }
+    }
+}
 
