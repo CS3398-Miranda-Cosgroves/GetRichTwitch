@@ -61,14 +61,14 @@ function bootLoader()
 {
     connectIRC();
     exitListen();
-    readBlacklist();
+    readUserData();
 }
 // Connect to Twitch:
 function connectIRC(){
     client.connect()
 }
 
-function readBlacklist()
+function readUserData()
 {
     fs.readFile("src/JSON/blacklist.json", 'utf8', function (err, data) {
         if (err)
@@ -81,8 +81,9 @@ function readBlacklist()
                 black_list = JSON.parse(data);
             }
         }
-
     });
+
+
 }
 
 function exitListen()
@@ -294,19 +295,19 @@ function gamble(target, context, params) {
                 }
                 else if (coin == 'tails' && coin == msg) {
                     sendMessage(target, context, 'You bet on Tails and you won the bet (somehow). You won 20 coins');
-                    coinObj[i] += 20;
+                    coinObj[i] += 30;
                 }
                 else if (coin == 'heads' && coin == msg) {
                     sendMessage(target, context, 'You bet on Heads and you won the bet (somehow). You won 20 coins');
-                    coinObj[i] += 20;
+                    coinObj[i] += 30;
                 }
                 else if (coin == 'tails' && coin != msg) {
                     sendMessage(target, context, 'You bet on Heads and you lost the bet. You lost 20 coins..boohoo');
-                    coinObj[i] -= 20;
+                    coinObj[i] -= 10;
                 }      
                 else if (coin == 'heads' && coin != msg) {
                     sendMessage(target, context, 'You bet on Tails and you lost the bet. You lost 20 coins..boohoo');
-                    coinObj[i] -= 20;
+                    coinObj[i] -= 10;
                 }
             }
             else if (coinObj[i] < 10) {
@@ -391,7 +392,7 @@ function givepts(target, context) {
 
     var viewer = context.username;
     //console.log(viewer);
-    var pts = Math.floor((Math.random()+1 ) * 50);
+    var pts = Math.floor((Math.random()+1 ) * 10);
 
     var i = 0;
     while (i <= viewerObj.length) {
@@ -530,34 +531,53 @@ function commands(target, context)
  * @param target - channel info
  * @param context - user info
  * @param videoID - String of requested URL
- */
+//  */
+
 function requestsong(target, context, videoID) {
-    if(VIDEO_ALLOWED === true) {
-        let ID = getVideoId(videoID.toString());
-        console.log(ID);
-        if(checkBlacklist(context.username) || checkBlacklist(ID['id']))
-        {
-            client.say(target, "@" + context.username + " song or viewer has been blocked from song requests");
-            return;
+    var viewer = context.username;
+    var i = 0;
+    while (i <= viewerObj.length) {
+        if (viewerObj[i] == viewer) {
+            if(coinObj[i] > 1) {
+                if(VIDEO_ALLOWED === true) {
+                    coinObj[i] -= 5;
+                    let ID = getVideoId(videoID.toString());
+                    console.log(ID);
+                    if(checkBlacklist(context.username) || checkBlacklist(ID['id']))
+                    {
+                        client.say(target, "@" + context.username + " song or viewer has been blocked from song requests");
+                        return;
+                    }
+                    if(Object.keys(ID).length === 0 && ID.constructor === Object) {
+                        client.say(target, "@" + context.username + " That ID is not a valid youtube URL")
+                    }
+                    else {
+                        let requestinfo = {SongID: ID, Name: context['username'], UserID: context['user-id']};
+                        let data = JSON.stringify(requestinfo, null, 2);
+                        fs.writeFile('src/JSON/song-request-update.json', data, 'utf8', function (err) {
+                            if (err) throw err;
+                            console.log('complete');
+                        });
+                        console.log("Playlist ID: " + session_playlist_id);
+                        playlistItemInsertNow(ID['id'], target);
+                    }
+                }
+                else {
+                    client.say(target, "Song requests are not currently allowed, get a moderator to use !allowrequests");
+                }
+
+            }
+            else {
+                sendMessage(target, context, context.username + ' has no coins to spend on fancy things!');
+            }
+            break;
         }
-        if(Object.keys(ID).length === 0 && ID.constructor === Object) {
-            client.say(target, "@" + context.username + " That is not a valid youtube URL")
+        else if (i == viewerObj.length) {
+            console.log(viewer + " is not in array");
+            sendMessage(target, context, context.username + ' needs to get points first!');
+            break;
         }
-        else
-        {
-            let requestinfo = {SongID: ID, Name: context['username'], UserID: context['user-id']};
-            let data = JSON.stringify(requestinfo, null, 2);
-            fs.writeFile('src/JSON/song-request-update.json', data, 'utf8', function (err) {
-                if (err) throw err;
-                console.log('complete');
-            });
-            console.log("Playlist ID: " + session_playlist_id);
-            playlistItemInsertNow(ID['id'], target);
-        }
-    }
-    else
-    {
-        client.say(target, "Song requests are not currently allowed, get a moderator to use !allowrequests");
+        i++;
     }
 }
 
