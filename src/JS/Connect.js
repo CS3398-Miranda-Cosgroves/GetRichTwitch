@@ -16,7 +16,7 @@ var ptsObj = [];
 var coinObj = [];
 var hugsObj = [];
 var discObj = [];
-let black_list = [];
+let black_list = {users: [], songID: []};
 var session_playlist_id = ''; //Holds playlist ID for this session
 let VIDEO_ALLOWED = false;
 
@@ -44,7 +44,7 @@ let opts = {
 
 // These are the commands the bot knows (defined below):
 let knownCommands = { echo, haiku, doom, givepts, slap, coinflip, hug, showHugs, discipline, gamble, purge, commands,
-    clear, showpts, trade, stats, requestsong, allowrequests, blockrequests, shopMenu, buyCommand}; //add new commands to this list
+    clear, showpts, trade, stats, requestsong, allowrequests, blockrequests, shopMenu, buyCommand, blacklist}; //add new commands to this list
 
 // Create a client with our options:
 let client = new tmi.client(opts);
@@ -57,9 +57,32 @@ client.on('disconnected', onDisconnectedHandler);
 
 initAuth();
 
+function bootLoader()
+{
+    connectIRC();
+    exitListen();
+    readBlacklist();
+}
 // Connect to Twitch:
 function connectIRC(){
     client.connect()
+}
+
+function readBlacklist()
+{
+    fs.readFile("src/JSON/blacklist.json", 'utf8', function (err, data) {
+        if (err)
+        {
+            console.log("ERROR READING BLACKLIST - REMOVING CURRENT LIST")
+        }
+        else{
+            if(!(Object.keys(data).length === 0))
+            {
+                black_list = JSON.parse(data);
+            }
+        }
+
+    });
 }
 
 function exitListen()
@@ -74,7 +97,21 @@ function exitListen()
         {
             /*
             INSERT CODE TO STORE DATA YOU WANT TO KEEP BETWEEN SESSIONS HERE
+            ALL FILE WRITES/READS SHOULD BE SYNCHRONIZED VERSION OR THEY WILL NOT COMPLETE CORRECTLY
+            PLEASE LEAVE COMMENTS FOR WHAT IS BEING STORED TO DISK AT EXIT TIME
              */
+
+            /**
+             *Stores black_list data into JSON to be read into memory on next boot
+             */
+            let data = JSON.stringify(black_list,  null, 2);
+            fs.writeFileSync('src/JSON/blacklist.json', data, 'utf8', function (err) {
+                if (err){
+                    console.log("ERROR STORING BLACKLIST TO FILE");
+                }
+                console.log('BLACKLIST STORED TO DISK');
+            });
+
             process.exit();
         }
     });
@@ -498,8 +535,13 @@ function requestsong(target, context, videoID) {
     if(VIDEO_ALLOWED === true) {
         let ID = getVideoId(videoID.toString());
         console.log(ID);
+        if(checkBlacklist(context.username) || checkBlacklist(ID['id']))
+        {
+            client.say(target, "@" + context.username + " song or viewer has been blocked from song requests");
+            return;
+        }
         if(Object.keys(ID).length === 0 && ID.constructor === Object) {
-            client.say(target, "@" + context.username + " That ID is not a valid youtube URL")
+            client.say(target, "@" + context.username + " That is not a valid youtube URL")
         }
         else
         {
@@ -714,8 +756,7 @@ function storeToken(token) {
 
     fs.writeFileSync(TOKEN_PATH, JSON.stringify(token));
     console.log('Token stored to ' + TOKEN_PATH);
-    connectIRC();
-    exitListen();
+    bootLoader();
 }
 
 /**
@@ -839,9 +880,72 @@ function playlistItemsDelete(auth, requestData) {
     });
 }
 
-function blacklist(target, context, videoID)
+function blacklist(target, context, parameters)
 {
+    let x = parameters.slice(' ');
+    let type = x[0];
+    let content = x[1];
+    //only allow mods to turn requests on
+    let badge = context['badges-raw'].split(",")[0];
+    if(context['mod'] === true || badge === "broadcaster/1")
+    {
+        if(type === "viewer")
+        {
+            if(checkBlacklist(content))
+            {
+                client.say(target, "@" + context['username'] + " viewer already blocked from requests");
+            }
+            else
+            {
+                black_list.users.push(content);
+                console.log(black_list);
+            }
 
+        }
+        else if(type === "song")
+        {
+            let ID = getVideoId(content.toString());
+            if(Object.keys(ID).length === 0 && ID.constructor === Object) {
+                client.say(target, "@" + context.username + " That is not a valid blacklist song")
+            }
+            else if(checkBlacklist(ID['id']))
+            {
+                client.say(target, "@" + context.username + " song already blocked");
+            }
+            else
+            {
+                black_list.songID.push(ID);
+                console.log(ID['id'] + " has been blocked from requests");
+            }
+        }
+        else
+        {
+            context.say(target, "@" + context.username + " incorrect command format")
+        }
+    }
+    else
+    {
+        context.say(target, "@" + context.username + " this command is moderator only.")
+    }
+}
+
+function checkBlacklist(name)
+{
+    for(let i in black_list.users)
+    {
+        if(black_list.users[i] === name)
+        {
+            return true;
+        }
+    }
+    for(let i in black_list.songID)
+    {
+        if(black_list.songID[i].id === name)
+        {
+            return true;
+        }
+    }
+    return false;
 }
 
 
@@ -867,8 +971,7 @@ function initAuth() {
                 getNewToken(oauth2Client);
             } else {
                 oauth2Client.credentials = JSON.parse(token);
-                connectIRC();
-                exitListen();
+                bootLoader();
             }
         });
     });
