@@ -84,6 +84,7 @@ function readUserData()
     });
 
 
+
 }
 
 function exitListen()
@@ -112,6 +113,8 @@ function exitListen()
                 }
                 console.log('BLACKLIST STORED TO DISK');
             });
+
+
 
             process.exit();
         }
