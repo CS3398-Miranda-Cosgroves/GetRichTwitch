@@ -16,6 +16,7 @@ var ptsObj = [];
 var coinObj = [];
 var hugsObj = [];
 var discObj = [];
+var slapPermObj = [];
 let black_list = {users: [], songID: []};
 var session_playlist_id = ''; //Holds playlist ID for this session
 let VIDEO_ALLOWED = false;
@@ -44,7 +45,7 @@ let opts = {
 
 // These are the commands the bot knows (defined below):
 let knownCommands = { echo, haiku, doom, givepts, slap, coinflip, hug, showHugs, discipline, gamble, purge, commands,
-    clear, showpts, trade, stats, requestsong, allowrequests, blockrequests, shopMenu, buyCommand, blacklist}; //add new commands to this list
+    clear, showpts, trade, stats, requestsong, allowrequests, blockrequests, shopMenu, buyCommand, blacklist, givePermission}; //add new commands to this list
 
 // Create a client with our options:
 let client = new tmi.client(opts);
@@ -246,27 +247,27 @@ function showHugs(target, context) {
 //Function called when the "discipline command is issued:
 //Function created by Eric Ross
 function discipline(target, context, disciplinee) {
-	    var viewer = context.username;
-	    //console.log(viewer);
-	    var discs = 1;
+    var viewer = context.username;
+    //console.log(viewer);
+    var discs = 1;
 
-	    var i = 0;
-	    while (i <= viewerObj.length) {
-	        if (viewerObj[i] == viewer) {
-	            discObj[i] += discs;
-	            hugsObj[i] -= discs;
-	    	   	sendMessage(target, context, context.username + ' has ' + ' been disciplined!');
-	            console.log(viewer + " is already in array");
-	            console.log(discObj[i]);
-	            break;
-	        }
-	        else if (i == viewerObj.length) {
-	            console.log(viewer + " is not in array");
-	            sendMessage(target, context, context.username + ' was given a stern talking to.');
-	            break;
-	        }
-	        i++;
-	    }
+    var i = 0;
+    while (i <= viewerObj.length) {
+        if (viewerObj[i] == viewer) {
+            discObj[i] += discs;
+            hugsObj[i] -= discs;
+            sendMessage(target, context, context.username + ' has ' + ' been disciplined!');
+            console.log(viewer + " is already in array");
+            console.log(discObj[i]);
+            break;
+        }
+        else if (i == viewerObj.length) {
+            console.log(viewer + " is not in array");
+            sendMessage(target, context, context.username + ' was given a stern talking to.');
+            break;
+        }
+        i++;
+    }
 }
 
 
@@ -281,16 +282,16 @@ function gamble(target, context, params) {
         if (viewerObj[i] == viewer) {
             console.log("user is already in array")
             if (params.length)
-            var msg = params.join(' ');
-    
+                var msg = params.join(' ');
+
             if (coin == 0)
                 coin = 'tails';
             else
                 coin = 'heads';
-            
+
             if (coinObj[i] >= 10) {
                 coinObj[i] -= 10;
-    
+
                 // Prints gamble messages;
                 if (msg != 'tails' && msg != 'heads') {
                     sendMessage(target, context, 'You did not enter either tails or heads loser...smh.');
@@ -306,7 +307,7 @@ function gamble(target, context, params) {
                 }
                 else if (coin == 'tails' && coin != msg) {
                     sendMessage(target, context, 'You bet on Heads and you lost the bet. You lost 10 coins..boohoo');
-                }      
+                }
                 else if (coin == 'heads' && coin != msg) {
                     sendMessage(target, context, 'You bet on Tails and you lost the bet. You lost 10 coins..boohoo');
                 }
@@ -315,7 +316,7 @@ function gamble(target, context, params) {
                 sendMessage(target, context, 'You need at least 10 coins to gamble with.')
             }
 
-        break;
+            break;
         }
         else if (i == viewerObj.length) {
             viewerObj.push(viewer);
@@ -344,35 +345,45 @@ function coinflip(target, context) {
 // Function called when the "slap" command is issued:
 // Function created by lts25
 function slap(target, context, slapee) {
-    var inChat = 1;
-    var i;
+    var inArray = false;
 
-    currUsers.push(context.username);
-    //console.log(currUsers);
+    for(x = 0; x < slapPermObj.length; x++){
+        if(context['user-id'] == slapPermObj[x]){
+            var inChat = 1;
+            var i;
+            inArray = true;
+            x = slapPermObj.length;
 
-    if (slapee != "") {
-        inChat = 0
-        for (i = 0; i < currUsers.length; i++){
-            if (currUsers[i] == slapee) {
-                inChat = 1;
-                break;
+            currUsers.push(context.username);
+            //console.log(currUsers);
+
+            if (slapee != "") {
+                inChat = 0
+                for (i = 0; i < currUsers.length; i++){
+                    if (currUsers[i] == slapee) {
+                        inChat = 1;
+                        break;
+                    }
+                }
+                if (inChat){
+                    client.say(target, "@" + slapee + ", YOU HAVE BEEN SLAPPED!");
+                }
+                else {
+                    client.say(target, "user not in slapable.");
+                }
+            }
+            else {
+                var numPersons = currUsers.length;
+                var person = Math.floor(Math.random() * numPersons);
+
+                var slapee = currUsers[person];
+                client.say(target, "@" + slapee + ", YOU HAVE BEEN SLAPPED!");
             }
         }
-        if (inChat){
-            client.say(target, "@" + slapee + ", YOU HAVE BEEN SLAPPED!");
-        }
-        else {
-            client.say(target, "user not in slapable.");
-        }
-    }
-    else {
-        var numPersons = currUsers.length;
-        var person = Math.floor(Math.random() * numPersons);
-
-        var slapee = currUsers[person];
-        client.say(target, "@" + slapee + ", YOU HAVE BEEN SLAPPED!");
     }
 
+    if(!inArray)
+        client.say(target, "You have not bought this command yet. GIVE US YOUR COINS!!");
 }
 
 //Function called when the "doom" command is issued:
@@ -532,7 +543,7 @@ function commands(target, context)
  * @param target - channel info
  * @param context - user info
  * @param videoID - String of requested URL
-//  */
+ //  */
 
 function requestsong(target, context, videoID) {
     var viewer = context.username;
@@ -1023,7 +1034,8 @@ function buyCommand(target, context, commandToBuy)
                 if(coinObj[i] >= 5) {
                     coinObj[i] -= 5;
                     client.say(target, "WOW! You bought the " + commandToBuy + " command. Are you happy with yourself now?");
-                    /**Calls function that gives the user the permission to use purchased command*/
+                    givePermission(target, context, commandToBuy);
+                    break;
                 }
             }
             else {
@@ -1031,5 +1043,13 @@ function buyCommand(target, context, commandToBuy)
                 break;
             }
     }
+    else
+        client.say(target, "You did not enter a correct command name. Use !shopMenu to see them available commands.")
 }
 
+function givePermission(target, context, commandToBuy)
+{
+    if(commandToBuy == "slap")
+        slapPermObj.push(context['user-id']);
+    /** ADD REST OF COMMANDS THAT CAN BE BOUGHT*/
+}
