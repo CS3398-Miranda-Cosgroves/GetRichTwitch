@@ -16,8 +16,7 @@ var ptsObj = [];
 var coinObj = [];
 var hugsObj = [];
 var discObj = [];
-var slapPermObj = [];
-let black_list = [];
+let black_list = {users: [], songID: []};
 var session_playlist_id = ''; //Holds playlist ID for this session
 let VIDEO_ALLOWED = false;
 
@@ -45,7 +44,7 @@ let opts = {
 
 // These are the commands the bot knows (defined below):
 let knownCommands = { echo, haiku, doom, givepts, slap, coinflip, hug, showHugs, discipline, gamble, purge, commands,
-    clear, showpts, trade, stats, requestsong, allowrequests, blockrequests, shopMenu, buyCommand, givePermission}; //add new commands to this list
+    clear, showpts, trade, stats, requestsong, allowrequests, blockrequests, shopMenu, buyCommand, blacklist}; //add new commands to this list
 
 // Create a client with our options:
 let client = new tmi.client(opts);
@@ -58,16 +57,41 @@ client.on('disconnected', onDisconnectedHandler);
 
 initAuth();
 
+function bootLoader()
+{
+    connectIRC();
+    exitListen();
+    readUserData();
+}
 // Connect to Twitch:
 function connectIRC(){
     client.connect()
+}
+
+function readUserData()
+{
+    fs.readFile("src/JSON/blacklist.json", 'utf8', function (err, data) {
+        if (err)
+        {
+            console.log("ERROR READING BLACKLIST - REMOVING CURRENT LIST")
+        }
+        else{
+            if(!(Object.keys(data).length === 0))
+            {
+                black_list = JSON.parse(data);
+            }
+        }
+    });
+
+
+
 }
 
 function exitListen()
 {
     var stdin = process.openStdin();
 
-    stdin.addListener("terminal_input", function (d) {
+    stdin.addListener("data", function (d) {
         // note:  d is an object, and when converted to a string it will
         // end with a linefeed.  so we (rather crudely) account for that
         // with toString() and then trim()
@@ -75,7 +99,23 @@ function exitListen()
         {
             /*
             INSERT CODE TO STORE DATA YOU WANT TO KEEP BETWEEN SESSIONS HERE
+            ALL FILE WRITES/READS SHOULD BE SYNCHRONIZED VERSION OR THEY WILL NOT COMPLETE CORRECTLY
+            PLEASE LEAVE COMMENTS FOR WHAT IS BEING STORED TO DISK AT EXIT TIME
              */
+
+            /**
+             *Stores black_list data into JSON to be read into memory on next boot
+             */
+            let data = JSON.stringify(black_list,  null, 2);
+            fs.writeFileSync('src/JSON/blacklist.json', data, 'utf8', function (err) {
+                if (err){
+                    console.log("ERROR STORING BLACKLIST TO FILE");
+                }
+                console.log('BLACKLIST STORED TO DISK');
+            });
+
+
+
             process.exit();
         }
     });
@@ -206,27 +246,27 @@ function showHugs(target, context) {
 //Function called when the "discipline command is issued:
 //Function created by Eric Ross
 function discipline(target, context, disciplinee) {
-    var viewer = context.username;
-    //console.log(viewer);
-    var discs = 1;
+	    var viewer = context.username;
+	    //console.log(viewer);
+	    var discs = 1;
 
-    var i = 0;
-    while (i <= viewerObj.length) {
-        if (viewerObj[i] == viewer) {
-            discObj[i] += discs;
-            hugsObj[i] -= discs;
-            sendMessage(target, context, context.username + ' has ' + ' been disciplined!');
-            console.log(viewer + " is already in array");
-            console.log(discObj[i]);
-            break;
-        }
-        else if (i == viewerObj.length) {
-            console.log(viewer + " is not in array");
-            sendMessage(target, context, context.username + ' was given a stern talking to.');
-            break;
-        }
-        i++;
-    }
+	    var i = 0;
+	    while (i <= viewerObj.length) {
+	        if (viewerObj[i] == viewer) {
+	            discObj[i] += discs;
+	            hugsObj[i] -= discs;
+	    	   	sendMessage(target, context, context.username + ' has ' + ' been disciplined!');
+	            console.log(viewer + " is already in array");
+	            console.log(discObj[i]);
+	            break;
+	        }
+	        else if (i == viewerObj.length) {
+	            console.log(viewer + " is not in array");
+	            sendMessage(target, context, context.username + ' was given a stern talking to.');
+	            break;
+	        }
+	        i++;
+	    }
 }
 
 
@@ -241,16 +281,16 @@ function gamble(target, context, params) {
         if (viewerObj[i] == viewer) {
             console.log("user is already in array")
             if (params.length)
-                var msg = params.join(' ');
-
+            var msg = params.join(' ');
+    
             if (coin == 0)
                 coin = 'tails';
             else
                 coin = 'heads';
-
+            
             if (coinObj[i] >= 10) {
                 coinObj[i] -= 10;
-
+    
                 // Prints gamble messages;
                 if (msg != 'tails' && msg != 'heads') {
                     sendMessage(target, context, 'You did not enter either tails or heads loser...smh.');
@@ -258,26 +298,24 @@ function gamble(target, context, params) {
                 }
                 else if (coin == 'tails' && coin == msg) {
                     sendMessage(target, context, 'You bet on Tails and you won the bet (somehow). You won 20 coins');
-                    coinObj[i] += 20;
+                    coinObj[i] += 30;
                 }
                 else if (coin == 'heads' && coin == msg) {
                     sendMessage(target, context, 'You bet on Heads and you won the bet (somehow). You won 20 coins');
-                    coinObj[i] += 20;
+                    coinObj[i] += 30;
                 }
                 else if (coin == 'tails' && coin != msg) {
-                    sendMessage(target, context, 'You bet on Heads and you lost the bet. You lost 20 coins..boohoo');
-                    coinObj[i] -= 20;
-                }
+                    sendMessage(target, context, 'You bet on Heads and you lost the bet. You lost 10 coins..boohoo');
+                }      
                 else if (coin == 'heads' && coin != msg) {
-                    sendMessage(target, context, 'You bet on Tails and you lost the bet. You lost 20 coins..boohoo');
-                    coinObj[i] -= 20;
+                    sendMessage(target, context, 'You bet on Tails and you lost the bet. You lost 10 coins..boohoo');
                 }
             }
             else if (coinObj[i] < 10) {
                 sendMessage(target, context, 'You need at least 10 coins to gamble with.')
             }
 
-            break;
+        break;
         }
         else if (i == viewerObj.length) {
             viewerObj.push(viewer);
@@ -306,45 +344,35 @@ function coinflip(target, context) {
 // Function called when the "slap" command is issued:
 // Function created by lts25
 function slap(target, context, slapee) {
-    var inArray = false;
+    var inChat = 1;
+    var i;
 
-    for(x = 0; x < slapPermObj.length; x++){
-        if(context['user-id'] == slapPermObj[x]){
-            var inChat = 1;
-            var i;
-            inArray = true;
-            x = slapPermObj.length;
+    currUsers.push(context.username);
+    //console.log(currUsers);
 
-            currUsers.push(context.username);
-            //console.log(currUsers);
-
-            if (slapee != "") {
-                inChat = 0
-                for (i = 0; i < currUsers.length; i++){
-                    if (currUsers[i] == slapee) {
-                        inChat = 1;
-                        break;
-                    }
-                }
-                if (inChat){
-                    client.say(target, "@" + slapee + ", YOU HAVE BEEN SLAPPED!");
-                }
-                else {
-                    client.say(target, "user not in slapable.");
-                }
-            }
-            else {
-                var numPersons = currUsers.length;
-                var person = Math.floor(Math.random() * numPersons);
-
-                var slapee = currUsers[person];
-                client.say(target, "@" + slapee + ", YOU HAVE BEEN SLAPPED!");
+    if (slapee != "") {
+        inChat = 0
+        for (i = 0; i < currUsers.length; i++){
+            if (currUsers[i] == slapee) {
+                inChat = 1;
+                break;
             }
         }
+        if (inChat){
+            client.say(target, "@" + slapee + ", YOU HAVE BEEN SLAPPED!");
+        }
+        else {
+            client.say(target, "user not in slapable.");
+        }
+    }
+    else {
+        var numPersons = currUsers.length;
+        var person = Math.floor(Math.random() * numPersons);
+
+        var slapee = currUsers[person];
+        client.say(target, "@" + slapee + ", YOU HAVE BEEN SLAPPED!");
     }
 
-    if(!inArray)
-        client.say(target, "You have not bought this command yet. GIVE US YOUR COINS!!");
 }
 
 //Function called when the "doom" command is issued:
@@ -365,7 +393,7 @@ function givepts(target, context) {
 
     var viewer = context.username;
     //console.log(viewer);
-    var pts = Math.floor((Math.random()+1 ) * 50);
+    var pts = Math.floor((Math.random()+1 ) * 10);
 
     var i = 0;
     while (i <= viewerObj.length) {
@@ -504,29 +532,53 @@ function commands(target, context)
  * @param target - channel info
  * @param context - user info
  * @param videoID - String of requested URL
- */
+//  */
+
 function requestsong(target, context, videoID) {
-    if(VIDEO_ALLOWED === true) {
-        let ID = getVideoId(videoID.toString());
-        console.log(ID);
-        if(Object.keys(ID).length === 0 && ID.constructor === Object) {
-            client.say(target, "@" + context.username + " That ID is not a valid youtube URL")
+    var viewer = context.username;
+    var i = 0;
+    while (i <= viewerObj.length) {
+        if (viewerObj[i] == viewer) {
+            if(coinObj[i] > 1) {
+                if(VIDEO_ALLOWED === true) {
+                    coinObj[i] -= 5;
+                    let ID = getVideoId(videoID.toString());
+                    console.log(ID);
+                    if(checkBlacklist(context.username) || checkBlacklist(ID['id']))
+                    {
+                        client.say(target, "@" + context.username + " song or viewer has been blocked from song requests");
+                        return;
+                    }
+                    if(Object.keys(ID).length === 0 && ID.constructor === Object) {
+                        client.say(target, "@" + context.username + " That ID is not a valid youtube URL")
+                    }
+                    else {
+                        let requestinfo = {SongID: ID, Name: context['username'], UserID: context['user-id']};
+                        let data = JSON.stringify(requestinfo, null, 2);
+                        fs.writeFile('src/JSON/song-request-update.json', data, 'utf8', function (err) {
+                            if (err) throw err;
+                            console.log('complete');
+                        });
+                        console.log("Playlist ID: " + session_playlist_id);
+                        playlistItemInsertNow(ID['id'], target);
+                    }
+                }
+                else {
+                    client.say(target, "Song requests are not currently allowed, get a moderator to use !allowrequests");
+                }
+
+            }
+            else {
+                sendMessage(target, context, context.username + ' has no coins to spend on fancy things!');
+            }
+            break;
         }
-        else
-        {
-            let requestinfo = {SongID: ID, Name: context['username'], UserID: context['user-id']};
-            let data = JSON.stringify(requestinfo, null, 2);
-            fs.writeFile('src/JSON/song-request-update.json', data, 'utf8', function (err) {
-                if (err) throw err;
-                console.log('complete');
-            });
-            console.log("Playlist ID: " + session_playlist_id);
-            playlistItemInsertNow(ID['id'], target);
+        else if (i == viewerObj.length) {
+            console.log(viewer + " is not in array");
+            sendMessage(target, context, context.username + ' needs to get points first!');
+            break;
         }
-    }
-    else
-    {
-        client.say(target, "Song requests are not currently allowed, get a moderator to use !allowrequests");
+        i++;
     }
 }
 
@@ -725,8 +777,7 @@ function storeToken(token) {
 
     fs.writeFileSync(TOKEN_PATH, JSON.stringify(token));
     console.log('Token stored to ' + TOKEN_PATH);
-    connectIRC();
-    exitListen();
+    bootLoader();
 }
 
 /**
@@ -850,9 +901,72 @@ function playlistItemsDelete(auth, requestData) {
     });
 }
 
-function blacklist(target, context, videoID)
+function blacklist(target, context, parameters)
 {
+    let x = parameters.slice(' ');
+    let type = x[0];
+    let content = x[1];
+    //only allow mods to turn requests on
+    let badge = context['badges-raw'].split(",")[0];
+    if(context['mod'] === true || badge === "broadcaster/1")
+    {
+        if(type === "viewer")
+        {
+            if(checkBlacklist(content))
+            {
+                client.say(target, "@" + context['username'] + " viewer already blocked from requests");
+            }
+            else
+            {
+                black_list.users.push(content);
+                console.log(black_list);
+            }
 
+        }
+        else if(type === "song")
+        {
+            let ID = getVideoId(content.toString());
+            if(Object.keys(ID).length === 0 && ID.constructor === Object) {
+                client.say(target, "@" + context.username + " That is not a valid blacklist song")
+            }
+            else if(checkBlacklist(ID['id']))
+            {
+                client.say(target, "@" + context.username + " song already blocked");
+            }
+            else
+            {
+                black_list.songID.push(ID);
+                console.log(ID['id'] + " has been blocked from requests");
+            }
+        }
+        else
+        {
+            context.say(target, "@" + context.username + " incorrect command format")
+        }
+    }
+    else
+    {
+        context.say(target, "@" + context.username + " this command is moderator only.")
+    }
+}
+
+function checkBlacklist(name)
+{
+    for(let i in black_list.users)
+    {
+        if(black_list.users[i] === name)
+        {
+            return true;
+        }
+    }
+    for(let i in black_list.songID)
+    {
+        if(black_list.songID[i].id === name)
+        {
+            return true;
+        }
+    }
+    return false;
 }
 
 
@@ -862,7 +976,7 @@ function blacklist(target, context, videoID)
  */
 function initAuth() {
     let credentials;
-    fs.readFile('C:/Users/Joel/WebstormProjects/GetRichTwitch/src/JSON/client_secret.json', function processClientSecrets(err, content) {
+    fs.readFile('src/JSON/client_secret.json', function processClientSecrets(err, content) {
         if (err) {
             console.log('Error loading client secret file: ' + err);
             return;
@@ -878,8 +992,7 @@ function initAuth() {
                 getNewToken(oauth2Client);
             } else {
                 oauth2Client.credentials = JSON.parse(token);
-                connectIRC();
-                exitListen();
+                bootLoader();
             }
         });
     });
@@ -910,8 +1023,7 @@ function buyCommand(target, context, commandToBuy)
                 if(coinObj[i] >= 5) {
                     coinObj[i] -= 5;
                     client.say(target, "WOW! You bought the " + commandToBuy + " command. Are you happy with yourself now?");
-                    givePermission(target, context, commandToBuy);
-                    break;
+                    /**Calls function that gives the user the permission to use purchased command*/
                 }
             }
             else {
@@ -919,13 +1031,5 @@ function buyCommand(target, context, commandToBuy)
                 break;
             }
     }
-    else
-        client.say(target, "You did not enter a correct command name. Use !shopMenu to see them available commands.")
 }
 
-function givePermission(target, context, commandToBuy)
-{
-    if(commandToBuy == "slap")
-        slapPermObj.push(context['user-id']);
-    /** ADD REST OF COMMANDS THAT CAN BE BOUGHT*/
-}
