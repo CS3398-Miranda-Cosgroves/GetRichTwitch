@@ -305,12 +305,10 @@ function gamble(target, context, params) {
                     coinObj[i] += 30;
                 }
                 else if (coin == 'tails' && coin != msg) {
-                    sendMessage(target, context, 'You bet on Heads and you lost the bet. You lost 20 coins..boohoo');
-                    coinObj[i] -= 10;
+                    sendMessage(target, context, 'You bet on Heads and you lost the bet. You lost 10 coins..boohoo');
                 }      
                 else if (coin == 'heads' && coin != msg) {
-                    sendMessage(target, context, 'You bet on Tails and you lost the bet. You lost 20 coins..boohoo');
-                    coinObj[i] -= 10;
+                    sendMessage(target, context, 'You bet on Tails and you lost the bet. You lost 10 coins..boohoo');
                 }
             }
             else if (coinObj[i] < 10) {
