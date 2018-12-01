@@ -5,8 +5,26 @@ Description: GetRichTwitch is an automated system, commonly known as a “bot”
 that monitors activity on the Twitch.tv site and aggregates the data in an easily digestible format. It monitors the chat content for trigger strings to drive input and responses to control things such as games, moderator controls, donation tracking, etc. This project aims to use image processing and machine learning to track donations and subscribers of users on twitch to estimate their income over different time frames, as well as to estimate the potential and mean values for incomes streams of different times and games played.
 
 Currently the code can be built and runs without errors.
+********************************************************************************************************************************
+						COMMAND FORMATS
+********************************************************************************************************************************
+If the command is not shown here it takes no extra input besides the command itself (!<command>)
+'*' denotes that this command has an optional input but also will accept if no extra parameters are passed.
 
-
+This is the format for all available commands:
+!echo <message>
+!doom <message>
+!givepts <user>*
+!slap <user>*
+!coinflip <heads/tails>
+!hug <user>*
+!discipline <user>*
+!purge <user>
+!requestsong <YouTube link or Video ID>
+!buyCommand <command name>
+!blacklist viewer <viewer name>
+!blacklist song <YouTube link or Video ID>
+!givePermission <command name>
 
 ********************************************************************************************************************************
                                                  RUNNING GETRICHTWITCH
