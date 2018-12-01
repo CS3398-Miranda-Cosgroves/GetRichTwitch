@@ -16,6 +16,7 @@ var ptsObj = [];
 var coinObj = [];
 var hugsObj = [];
 var discObj = [];
+var chatObj = [];
 var slapPermObj = [];
 let black_list = {users: [], songID: []};
 var session_playlist_id = ''; //Holds playlist ID for this session
@@ -44,7 +45,7 @@ let opts = {
 };
 
 // These are the commands the bot knows (defined below):
-let knownCommands = { echo, haiku, doom, givepts, slap, coinflip, hug, showHugs, discipline, gamble, purge, commands,
+let knownCommands = { echo, haiku, doom, givepts, slap, coinflip, hug, showchats, showhugs, discipline, gamble, purge, commands,
     clear, showpts, trade, stats, requestsong, allowrequests, blockrequests, shopMenu, buyCommand, blacklist, givePermission}; //add new commands to this list
 
 let client;
@@ -259,12 +260,33 @@ function exitListen()
 function onMessageHandler (target, context, msg, self) {
     if (self) { return } // Ignore messages from the bot
     console.log("message type: " + context['message-type']);
+    var chats = 1;
     // This isn't a command since it has no prefix:
     if (msg.substr(0, 1) !== commandPrefix) {
         console.log(`[${target} (${context['message-type']})] ${context.username}: ${msg}`)
         return
     }
 
+    var viewer = context.username;
+    //console.log(viewer);
+    
+    var i = 0;
+    while (i <= viewerObj.length) {
+        if (viewerObj[i] == viewer) {
+            chatObj[i] += chats;
+            console.log(viewer + " is already in array");
+            console.log(chatObj[i]);
+            break;
+        }
+        else if (i == viewerObj.length) {
+            viewerObj.push(viewer);
+            chatObj.push(chats);
+            console.log(viewer + " has been added to array");
+            console.log(chatObj[i]);
+            break;
+        }
+        i++;
+    }
     // Split the message into individual words:
     const parse = msg.slice(1).split(' ')
     // The command name is the first (0th) one:
