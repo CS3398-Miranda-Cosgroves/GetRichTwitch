@@ -426,6 +426,27 @@ function discipline(target, context, disciplinee) {
 }
 
 
+//Function called when the "showchats" command is used
+//Function created by Eric Ross
+function showchats(target, context) {
+    var viewer = context.username;
+
+    var i = 0;
+    while (i <= viewerObj.length) {
+        if (viewerObj[i] == viewer) {
+            sendMessage(target, context, context.username + ' has chatted ' + chatObj[i] + ' times!');
+            console.log("viewer is in hugs array")
+            break;
+        }
+        else if (i == viewerObj.length) {
+            console.log(viewer + " is not in array");
+            sendMessage(target, context, context.username + ' has not chatted!');
+            break;
+        }
+        i++;
+    }    
+}
+
 // Function called when the "gamble" command is issued:
 // Function created by JoelMartinez0404
 function gamble(target, context, params) {
