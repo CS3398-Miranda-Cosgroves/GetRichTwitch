@@ -19,7 +19,7 @@ var discObj = [];
 var slapPermObj = [];
 let black_list = {users: [], songID: []};
 var session_playlist_id = ''; //Holds playlist ID for this session
-let VIDEO_ALLOWED = false;
+let VIDEO_ALLOWED;
 
 // If modifying these scopes, delete your previously saved credentials
 // at ~/.credentials/google-apis-nodejs-quickstart.json
@@ -31,15 +31,15 @@ var TOKEN_PATH = TOKEN_DIR + 'google-apis-nodejs-quickstart.json';
 
 
 // Valid commands start with:
-let commandPrefix = '!';
+let commandPrefix;
 // Define configuration options:
 let opts = {
     identity: {
-        username: 'MirandaCosgroveBot',
-        password: 'oauth:' + 'l8ec68snfdwehzsug2ekcoaza7hvkn'
+        username: '',
+        password: ''
     },
     channels: [
-        'MirandaCosgroveBot'
+        ''
     ]
 };
 
@@ -47,20 +47,12 @@ let opts = {
 let knownCommands = { echo, haiku, doom, givepts, slap, coinflip, hug, showHugs, discipline, gamble, purge, commands,
     clear, showpts, trade, stats, requestsong, allowrequests, blockrequests, shopMenu, buyCommand, blacklist, givePermission}; //add new commands to this list
 
-// Create a client with our options:
-let client = new tmi.client(opts);
-
-// Register our event handlers (defined below):
-client.on('message', onMessageHandler);
-client.on("subscription", onSubHandler);
-client.on('connected', onConnectedHandler);
-client.on('disconnected', onDisconnectedHandler);
+let client;
 
 initAuth();
 
 function bootLoader()
 {
-    connectIRC();
     exitListen();
     readUserData();
 }
@@ -71,6 +63,7 @@ function connectIRC(){
 
 function readUserData()
 {
+    //Read song blacklist into memory
     fs.readFile("src/JSON/blacklist.json", 'utf8', function (err, data) {
         if (err)
         {
@@ -80,6 +73,70 @@ function readUserData()
             if(!(Object.keys(data).length === 0))
             {
                 black_list = JSON.parse(data);
+            }
+        }
+    });
+
+    //Read bot login details and channel target into memory
+    fs.readFile("src/JSON/connection_settings.json" , 'utf8' , function(err, data){
+       if(err)
+       {
+           console.log(err);
+           console.log("Error reading settings, defaulting to test channel (MirandaCosgroveBot)");
+           opts = {
+               identity: {
+                   username: "MirandaCosgroveBot",
+                   password: "oauth:l8ec68snfdwehzsug2ekcoaza7hvkn"
+               },
+               channels: [
+                   "MirandaCosgroveBot"
+               ]
+           };
+           //Start client through TMI using login from settings file
+           client  = new tmi.client(opts);
+           client.on('message', onMessageHandler);
+           client.on("subscription", onSubHandler);
+           client.on('connected', onConnectedHandler);
+           client.on('disconnected', onDisconnectedHandler);
+           client.connect()
+       }
+       else
+       {
+           if(!(Object.keys(data).length === 0))
+           {
+               //Set login details
+               opts = JSON.parse(data);
+               //Start client through TMI using login from settings file
+               client  = new tmi.client(opts);
+               client.on('message', onMessageHandler);
+               client.on("subscription", onSubHandler);
+               client.on('connected', onConnectedHandler);
+               client.on('disconnected', onDisconnectedHandler);
+               client.connect()
+           }
+           else
+           {
+               console.log("Settings file empty, please check README 'Settings' section for format and add src/JSON/connection_settings.json");
+           }
+
+       }
+    });
+
+    //Read general settings into memory
+    fs.readFile("src/JSON/general_settings.json", 'utf8', function (err, data) {
+        if (err)
+        {
+            console.log("ERROR READING SETTINGS - GOING TO DEFAULTS (see README 'Settings' section for defaults)");
+            VIDEO_ALLOWED = false;
+            commandPrefix = '!';
+        }
+        else{
+            if(!(Object.keys(data).length === 0))
+            {
+                let settings = JSON.parse(data);
+                console.log(settings);
+                VIDEO_ALLOWED = settings['VIDEO_REQUEST_ON_BY_DEFAULT']
+                commandPrefix = settings['COMMAND_PREFIX'];
             }
         }
     });
@@ -533,7 +590,7 @@ function commands(target, context)
     var cmdStrings = [];
 
     for(var commandName in knownCommands)
-        cmdStrings[cmdStrings.length] = " !" + commandName.toString() + " ";
+        cmdStrings[cmdStrings.length] = " " + commandPrefix + commandName.toString() + " ";
 
     client.say(target, "@" + context.username + " Commands known:" + cmdStrings);
 }
@@ -550,9 +607,72 @@ function requestsong(target, context, videoID) {
     var i = 0;
     while (i <= viewerObj.length) {
         if (viewerObj[i] == viewer) {
-            if(coinObj[i] > 1) {
+            if(coinObj[i] > 5) {
                 if(VIDEO_ALLOWED === true) {
-                    coinObj[i] -= 5;
+                    if(session_playlist_id == '')
+                    {
+                        fs.readFile('src/JSON/most_recent_playlist.json', function (err, data)
+                        {
+                            if (err)
+                            {//If you get an error on the read, create a new playlist and overwrite previous file
+                                console.log(err + "\nError fetching playlist, discarding data in most_recent_playlist.json");
+                                fs.readFile('src/JSON/client_secret.json', function processClientSecrets(err, content) {
+                                    if (err) {
+                                        console.log('Error loading client secret file: ' + err);
+                                        return;
+                                    }
+                                    console.log("Playlist does not exist, creating new playlist");
+                                    // Authorize a client with the loaded credentials, then call the YouTube API to create a playlist
+                                    authorize(JSON.parse(content), {
+                                        'params': {
+                                            'part': 'snippet,status',
+                                            'onBehalfOfContentOwner': ''
+                                        }, 'properties': {
+                                            'snippet.title': 'STREAM ' + datetime.toString(),
+                                            'snippet.description': '',
+                                            'snippet.tags[]': '',
+                                            'snippet.defaultLanguage': '',
+                                            'status.privacyStatus': ''
+                                        }
+                                    }, playlistsInsert);
+                                });
+                                return;
+                            }
+                            //Otherwise check time to see if a recent playlist exists, otherwise create a new one and overwrite file
+                            data = (data.toString()).split(' ');
+                            let time_created = parseInt(data[1], 10);
+                            let last_ID = data[0];
+                            let current_time = datetime.getTime();
+                            console.log(last_ID);
+                            if ((current_time - time_created) < 86700000)
+                            {
+                                console.log("Playlist from within 24 hours found, grabbing playlist ID: " + last_ID);
+                                session_playlist_id = last_ID;
+                            }
+                            else{
+                                console.log("Playlist does not exist, creating new playlist");
+                                // Authorize a client with the loaded credentials, then call the YouTube API to create a playlist
+                                fs.readFile('src/JSON/client_secret.json', function processClientSecrets(err, content) {
+                                    if (err) {
+                                        console.log('Error loading client secret file: ' + err);
+                                        return;
+                                    }
+                                    authorize(JSON.parse(content), {
+                                        'params': {
+                                            'part': 'snippet,status',
+                                            'onBehalfOfContentOwner': ''
+                                        }, 'properties': {
+                                            'snippet.title': 'STREAM ' + datetime.toString(),
+                                            'snippet.description': '',
+                                            'snippet.tags[]': '',
+                                            'snippet.defaultLanguage': '',
+                                            'status.privacyStatus': ''
+                                        }
+                                    }, playlistsInsert);
+                                });
+                            }
+                        });
+                    }
                     let ID = getVideoId(videoID.toString());
                     console.log(ID);
                     if(checkBlacklist(context.username) || checkBlacklist(ID['id']))
@@ -572,6 +692,7 @@ function requestsong(target, context, videoID) {
                         });
                         console.log("Playlist ID: " + session_playlist_id);
                         playlistItemInsertNow(ID['id'], target);
+                        coinObj[i] -= 5;
                     }
                 }
                 else {

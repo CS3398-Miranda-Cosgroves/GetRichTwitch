@@ -27,7 +27,37 @@ Currently the code can be built and runs without errors.
 **For !playvideo and other features that require youtube API you will be required to create your own client_secrets.json file with your youtube account info
 or you will be prompted to authorize MirandaCosgroveBOT to access your YouTube account data**
 
+********************************************************************************************************************************
+						SETTINGS AND SETTINGS FILES
+********************************************************************************************************************************
+general_settings.json- This file currently holds the abilty to change if song requests are enabled on boot or if a moderator has
+to !allowrequests first (VIDEO_REQUEST_ON_BY_DEFAULT in general_settings.json) as well as the ability to change the prefix for commands
+e.g. !commands (COMMAND_PREFIX in general_settings.json).
 
+DEFAULT VALUES:
+VIDEO_REQUEST_ON_BY_DEFAULT = true
+COMMAND_PREFIX = !
+
+connection_settings.json - This file holds the authentication key for the bot, the bot username, and the channel the bot will connect to.
+You should probably only change the channels list unless you are a power user and understand the consequences of changing the others
+
+FORMAT FOR CONNECTION SETTINGS:
+{
+    "identity": {
+        "username": "MirandaCosgroveBot",
+        "password": "oauth:l8ec68snfdwehzsug2ekcoaza7hvkn"
+    },
+    "channels": [
+        "Channel1",
+	"Channel2",
+	"Channel3"
+    ]
+}
+
+To connect to multiple channels at a time simply add the name where Channel1, Channel2, Channel3 are in that format example, default value
+before being changed is to connect to the bot's own channel (twitch.tv/MirandaCosgroveBot). Make sure you are separating each channel name with a comma
+and leaving the name of the channel in quotes or you could run into errors loading which would force it to go to the default channel (Keep an eye on
+the console for errors).
 
 ******************************************************************************************************************************** 
 												 NEXT STEPS SPRINT 1
