@@ -140,6 +140,57 @@ function readUserData()
             }
         }
     });
+    
+        //viewerObj
+    fs.readFile("src/JSON/viewerArr.json", 'utf8', function (err, viewerArr) {
+        if (err)
+        {
+            console.log("ERROR READING VIEWER ARRAY - REMOVING CURRENT LIST")
+        }
+        else{
+            if(!(Object.keys(viewerArr).length === 0))
+            { 
+                for(var i in viewerObj) {
+                    viewerObj.push([i, viewerArr [i]]);
+                    console.log(viewerObj[i]);
+                }
+            }
+        }
+    });
+
+    //ptsObj
+    fs.readFile("src/JSON/ptsArr.json", 'utf8', function (err, ptsArr) {
+        if (err)
+        {
+            console.log("ERROR READING PTS ARRAY - REMOVING CURRENT LIST")
+        }
+        else{
+            if(!(Object.keys(ptsArr).length === 0))
+            { 
+                for(var i in ptsObj) {
+                    ptsObj.push([i, ptsArr [i]]);
+                    console.log(ptsObj[i]);
+                }
+            }
+        }
+    });
+
+    //coinObj
+    fs.readFile("src/JSON/coinArr.json", 'utf8', function (err, coinArr) {
+        if (err)
+        {
+            console.log("ERROR READING VIEWER ARRAY - REMOVING CURRENT LIST")
+        }
+        else{
+            if(!(Object.keys(coinArr).length === 0))
+            { 
+                for(var i in coinObj) {
+                    coinObj.push([i, coinArr [i]]);
+                    console.log(coinObj[i]);
+                }
+            }
+        }
+    });
 
 
 
@@ -172,7 +223,32 @@ function exitListen()
                 console.log('BLACKLIST STORED TO DISK');
             });
 
+            //viewObj
+            let viewerArr = JSON.stringify(viewerObj, null, 2);
+            fs.writeFileSync('src/JSON/viewerArr.json', viewerArr, 'utf8', function (err) {
+                if (err){
+                    console.log("ERROR STORING VIEWER ARRAY TO FILE");
+                }
+                console.log('VIEWEROBJ STORED TO DISK');
+            });
 
+            //ptsObj
+            let ptsArr = JSON.stringify(ptsObj,  null, 2);
+            fs.writeFileSync('src/JSON/ptsArr.json', ptsArr, 'utf8', function (err) {
+                if (err){
+                    console.log("ERROR STORING PTS ARRAY TO FILE");
+                }
+                console.log('PTSOBJ STORED TO DISK');
+            });
+
+            //coinObj
+            let coinArr = JSON.stringify(coinObj,  null, 2);
+            fs.writeFileSync('src/JSON/coinArr.json', coinArr, 'utf8', function (err) {
+                if (err){
+                    console.log("ERROR STORING COIN ARRAY TO FILE");
+                }
+                console.log('COINOBJ STORED TO DISK');
+            });
 
             process.exit();
         }
