@@ -378,16 +378,16 @@ function hug(target, context, huggee) {
 }
 
 
-//Function called when "showHugs" command is issued:
+//Function called when "showhugs" command is issued:
 //Function created by Eric Ross
-function showHugs(target, context) {
+function showhugs(target, context) {
     var viewer = context.username;
 
     var i = 0;
     while (i <= viewerObj.length) {
         if (viewerObj[i] == viewer) {
             sendMessage(target, context, context.username + ' has ' + hugsObj[i] + ' total  hugs!');
-            console.log("viewer is in showpts array")
+            //console.log("viewer is in showpts array")
             break;
         }
         else if (i == viewerObj.length) {
