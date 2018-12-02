@@ -142,20 +142,21 @@ function readUserData()
         }
     });
     
-        //viewerObj
+    //viewerObj
     fs.readFile("src/JSON/viewerArr.json", 'utf8', function (err, viewerArr) {
         if (err)
         {
             console.log("ERROR READING VIEWER ARRAY - REMOVING CURRENT LIST")
         }
         else{
-            if(!(Object.keys(viewerArr).length === 0))
-            { 
-                for(var i in viewerObj) {
-                    viewerObj.push([i, viewerArr [i]]);
+           // if(!(Object.keys(viewerArr).length === 0))
+            //{
+                var temp = JSON.parse(viewerArr); 
+                for(var i = 0; i < temp.length; i++) {
+                    viewerObj[i] = temp[i];
                     console.log(viewerObj[i]);
                 }
-            }
+            //}
         }
     });
 
@@ -166,13 +167,14 @@ function readUserData()
             console.log("ERROR READING PTS ARRAY - REMOVING CURRENT LIST")
         }
         else{
-            if(!(Object.keys(ptsArr).length === 0))
-            { 
-                for(var i in ptsObj) {
-                    ptsObj.push([i, ptsArr [i]]);
+           // if(!(Object.keys(ptsArr).length === 0))
+            //{ 
+                temp = JSON.parse(ptsArr);
+                for(var i = 0; i < temp.length; i++) {
+                    ptsObj[i] = temp[i];
                     console.log(ptsObj[i]);
                 }
-            }
+            //}
         }
     });
 
@@ -183,13 +185,14 @@ function readUserData()
             console.log("ERROR READING VIEWER ARRAY - REMOVING CURRENT LIST")
         }
         else{
-            if(!(Object.keys(coinArr).length === 0))
-            { 
-                for(var i in coinObj) {
-                    coinObj.push([i, coinArr [i]]);
+            //if(!(Object.keys(coinArr).length === 0))
+            //{ 
+                temp = JSON.parse(coinArr);
+                for(var i = 0; i < temp.length; i++) {
+                    coinObj[i] = temp[i];
                     console.log(coinObj[i]);
                 }
-            }
+            //}
         }
     });
 
