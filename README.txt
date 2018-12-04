@@ -2,7 +2,7 @@
 GetRichTwitch
 
 Description: GetRichTwitch is an automated system, commonly known as a “bot”, made by the Miranda Cosgroves team at Texas State
-that monitors activity on the Twitch.tv site and aggregates the data in an easily digestible format. It monitors the chat content for trigger strings to drive input and responses to control things such as games, moderator controls, donation tracking, etc. This project aims to use image processing and machine learning to track donations and subscribers of users on twitch to estimate their income over different time frames, as well as to estimate the potential and mean values for incomes streams of different times and games played.
+Its goal is to monitor chat activity and assist moderators and broadcasters in managing their channel, engaging their viewers, and shifting work from the broadcaster to an event based system that can detect and respond to common needs and requests automatically without broadcaster input. This allows the broadcaster to focus on other areas without worrying about managing their own chat environment as closely.
 
 Currently the code can be built and runs without errors.
 ********************************************************************************************************************************
