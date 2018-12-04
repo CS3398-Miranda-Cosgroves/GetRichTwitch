@@ -228,3 +228,44 @@ effect on me during this sprint.
 Joel- I can create a schedule and dedicate an hour or more on days I know I can work on our code. I also need to push code
 more consistently.
 Michael- I need to start testing on a larger scale to find edge cases
+
+
+
+
+********************************************************************************************************************************
+                                                 RETROSPECTIVE 
+												 SPRINT 3
+******************************************************************************************************************************** 
+
+
+
+o What Went Well? (4 pts–Team) Four or more teambullets (4 pts)
+1. Great teamwork on Slack
+2. 
+3. 
+4. 
+
+o What Might Be Impeding Us from Performing Better? One or more team bullets (1pts)
+1. 
+2. 
+3. 
+4. 
+ 
+o What Can We do to Improve? (5pt–Team) One or more team bullets
+1. 
+2. 
+3. 
+4. 
+
+(10 pts –Individual) Team member reports on the results of their Sprint 2 “measurable improvement action.”
+Cody- 
+Levi-  
+Eric- 
+Joel- 
+Michael-   
+
+(40pts-Individual) Feature/Accomplishments
+Cody-
+Levi-
+Joel-
+Michael-
