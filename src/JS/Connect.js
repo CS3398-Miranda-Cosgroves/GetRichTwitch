@@ -29,11 +29,9 @@ var TOKEN_DIR = (process.env.HOME || process.env.HOMEPATH ||
     process.env.USERPROFILE) + '/.credentials/';
 var TOKEN_PATH = TOKEN_DIR + 'google-apis-nodejs-quickstart.json';
 
-
-
 // Valid commands start with:
 let commandPrefix;
-// Define configuration options:
+// Define configuration options for connection:
 let opts = {
     identity: {
         username: '',
@@ -203,7 +201,6 @@ function readUserData()
 function exitListen()
 {
     var stdin = process.openStdin();
-
     stdin.addListener("data", function (d) {
         // note:  d is an object, and when converted to a string it will
         // end with a linefeed.  so we (rather crudely) account for that
@@ -283,6 +280,8 @@ function onMessageHandler (target, context, msg, self) {
         }
         else if (i == viewerObj.length) {
             viewerObj.push(viewer);
+            coinObj.push(0);
+            ptsObj.push(0);
             chatObj.push(chats);
             console.log(viewer + " has been added to array");
             console.log(chatObj[i]);
@@ -583,7 +582,7 @@ function givepts(target, context) {
 
     var viewer = context.username;
     //console.log(viewer);
-    var pts = Math.floor((Math.random()+1 ) * 10);
+    var pts = Math.floor((Math.random()+1 ) * 100);
 
     var i = 0;
     while (i <= viewerObj.length) {
@@ -655,6 +654,9 @@ function trade(target, context) {
         }
         else if (i == viewerObj.length) {
             console.log(viewer + " is not in array");
+            viewerObj.push(viewer);
+            ptsObj.push(0);
+            coinObj.push(0);
             sendMessage(target, context, context.username + ' has no points!');
             break;
         }
@@ -729,7 +731,7 @@ function requestsong(target, context, videoID) {
     var i = 0;
     while (i <= viewerObj.length) {
         if (viewerObj[i] == viewer) {
-            if(coinObj[i] > 5) {
+            if(coinObj[i] >= 5) {
                 if(VIDEO_ALLOWED === true) {
                     if(session_playlist_id == '')
                     {
@@ -829,6 +831,9 @@ function requestsong(target, context, videoID) {
         }
         else if (i == viewerObj.length) {
             console.log(viewer + " is not in array");
+            viewerObj.push(viewer);
+            ptsObj.push(0);
+            coinObj.push(0);
             sendMessage(target, context, context.username + ' needs to get points first!');
             break;
         }
@@ -1155,6 +1160,12 @@ function playlistItemsDelete(auth, requestData) {
     });
 }
 
+/**
+ * Block target song or user from requesting songs
+ * @param target
+ * @param context
+ * @param parameters
+ */
 function blacklist(target, context, parameters)
 {
     let x = parameters.slice(' ');
@@ -1195,12 +1206,12 @@ function blacklist(target, context, parameters)
         }
         else
         {
-            context.say(target, "@" + context.username + " incorrect command format")
+            client.say(target, "@" + context.username + " incorrect command format")
         }
     }
     else
     {
-        context.say(target, "@" + context.username + " this command is moderator only.")
+        client.say(target, "@" + context.username + " this command is moderator only.")
     }
 }
 
@@ -1257,12 +1268,14 @@ function shopMenu(target)
     var cmdStrings = [];
 
     client.say(target, "***WELCOME TO THE FUNCTION SHOP MENU***");
-
+    client.say(target, "SPECIAL FUNCTIONS 5 COINS EACH: ");
     for(var commandName in knownCommands)
-        cmdStrings[cmdStrings.length] = "-!" + commandName.toString() + " = 5 coins";
-
+        cmdStrings[cmdStrings.length] = ",-!" + commandName.toString() + " ";
+    let finalstring = '';
     for(i = 0; i < cmdStrings.length; i++)
-        client.say(target, cmdStrings[i]);
+        finalstring += cmdStrings[i];
+
+    client.say(target, finalstring);
 }
 
 function buyCommand(target, context, commandToBuy)
@@ -1273,7 +1286,7 @@ function buyCommand(target, context, commandToBuy)
 
         var i = 0;
         while (i <= viewerObj.length)
-            if (viewerObj[i] == viewer){
+            if (viewerObj[i] === viewer){
                 if(coinObj[i] >= 5) {
                     coinObj[i] -= 5;
                     client.say(target, "WOW! You bought the " + commandToBuy + " command. Are you happy with yourself now?");
@@ -1282,6 +1295,9 @@ function buyCommand(target, context, commandToBuy)
                 }
             }
             else {
+                viewerObj.push(viewer);
+                coinObj.push(0);
+                ptsObj.push(0);
                 client.say(target, "Haha you don't have enough coins to buy that command x)")
                 break;
             }
