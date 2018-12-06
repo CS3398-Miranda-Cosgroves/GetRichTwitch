@@ -103,7 +103,7 @@ o What can we do to Improve? (5pt–Team) One or more team bullets
 4. 
 
 (10 pts –Individual) Team member reports on the results of their Sprint 2 “measurable improvement action.”
-Cody- 
+Cody- I failed to push code more consistently and I am blaming the Thanksgiving break. It can be measured in the burndown report for me.
 Levi-  
 Eric- 
 Joel- 
