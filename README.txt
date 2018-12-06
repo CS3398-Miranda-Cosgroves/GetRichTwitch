@@ -86,18 +86,18 @@ the console for errors).
 
 o What Went Well? (4 pts–Team) Four or more teambullets (4 pts)
 1. Great teamwork on Slack
-2. 
+2. We were able to make sure that everyone had their code running like they wanted.
 3. 
 4. 
 
 o What Might Be Impeding Us from Performing Better? One or more team bullets (1pts)
-1. 
+1. Lack of better functionality of node or Javascript
 2. 
 3. 
 4. 
  
-o What Can We do to Improve? (5pt–Team) One or more team bullets
-1. 
+o What can we do to Improve? (5pt–Team) One or more team bullets
+1. More team "meetings" in person.
 2. 
 3. 
 4. 
@@ -110,7 +110,7 @@ Joel-
 Michael-   
 
 (40pts-Individual) Feature/Accomplishments
-Cody-
+Cody- I was able to learn Javascript and node.js well enough to do this project. A feature I created was the arrays for the users, points, and coins. I am happy I was able to implement the storage and retrieval of these arrays correctly.
 Levi-
 Eric-
 Joel-
