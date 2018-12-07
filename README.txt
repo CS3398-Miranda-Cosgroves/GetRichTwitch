@@ -92,26 +92,28 @@ o What Went Well? (4 pts–Team) Four or more teambullets (4 pts)
 
 o What Might Be Impeding Us from Performing Better? One or more team bullets (1pts)
 1. Lack of better functionality of node or Javascript
-2. 
+2. Needing more time that is not available due to other classes and work and responsibilities
 3. 
 4. 
  
 o What can we do to Improve? (5pt–Team) One or more team bullets
 1. More team "meetings" in person.
-2. 
+2. documentation of what the program currently has and what is planned for possible furture sprints
 3. 
 4. 
 
 (10 pts –Individual) Team member reports on the results of their Sprint 2 “measurable improvement action.”
 Cody- I failed to push code more consistently and I am blaming the Thanksgiving break. It can be measured in the burndown report for me.
-Levi-  
+Levi- I failed to get more sleep, end of the semester engineering classes aren't conducive to the concept of sleep. Along with sleep, communication is also more
+difficult if schedules do not synchronize, so I also failed at better communication. 
 Eric- 
 Joel- 
 Michael-   
 
 (40pts-Individual) Feature/Accomplishments
 Cody- I was able to learn Javascript and node.js well enough to do this project. A feature I created was the arrays for the users, points, and coins. I am happy I was able to implement the storage and retrieval of these arrays correctly.
-Levi-
+Levi- Features I created were some commands, slap, and coinflip. I worked with team members to make our JavaScript and Java code work with JSON files.
+I also created a windows batch file as a runnable executable for the program. 
 Eric-
 Joel-
 Michael-
