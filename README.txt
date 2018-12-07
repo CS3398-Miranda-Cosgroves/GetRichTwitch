@@ -106,7 +106,7 @@ o What can we do to Improve? (5pt–Team) One or more team bullets
 Cody- I failed to push code more consistently and I am blaming the Thanksgiving break. It can be measured in the burndown report for me.
 Levi- I failed to get more sleep, end of the semester engineering classes aren't conducive to the concept of sleep. Along with sleep, communication is also more
 difficult if schedules do not synchronize, so I also failed at better communication. 
-Eric- 
+Eric- I couldn't get as much work dones as i would have liked too, due to poor planning and lack of time during the thanksgiving break.
 Joel- 
 Michael- Succeeded in developing a more robust error handling procedure as well as more coverage of input handled
 
@@ -115,7 +115,7 @@ Cody- I was able to learn Javascript and node.js well enough to do this project.
 Levi- Features I created were some commands, slap, and coinflip [can be found under *\GitHub\GetRichTwitch\src\JS\Connect, press ctrl F and search for the command names]. I worked with team members to make our JavaScript and Java code work with JSON files.
 I also created a windows batch file as a runnable executable for the program [can be found under *\GitHub\GetRichTwitch\ruuuun, only works for windows]
 
-Eric-
+Eric- Learning javascript, creating functions for hug, discipline, showhugs, showdiscipline, showchats
 
 Joel-
 
