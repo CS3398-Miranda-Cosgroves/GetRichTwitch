@@ -112,8 +112,9 @@ Michael-
 
 (40pts-Individual) Feature/Accomplishments
 Cody- I was able to learn Javascript and node.js well enough to do this project. A feature I created was the arrays for the users, points, and coins. I am happy I was able to implement the storage and retrieval of these arrays correctly.
-Levi- Features I created were some commands, slap, and coinflip. I worked with team members to make our JavaScript and Java code work with JSON files.
-I also created a windows batch file as a runnable executable for the program. 
+Levi- Features I created were some commands, slap, and coinflip [can be found under *\GitHub\GetRichTwitch\src\JS\Connect, press ctrl F and search for the command names]. I worked with team members to make our JavaScript and Java code work with JSON files.
+I also created a windows batch file as a runnable executable for the program [can be found under *\GitHub\GetRichTwitch\ruuuun, only works for windows]
+
 Eric-
 Joel-
 Michael-
