@@ -11,13 +11,16 @@ let datetime = new Date();
 
 //channel variables
 let currUsers = [ 'MirandaCosgroveBot' ];
-var viewerObj = [];
-var ptsObj = [];
-var coinObj = [];
-var hugsObj = [];
-var discObj = [];
-var chatObj = [];
-var slapPermObj = [];
+let userData = [{
+    userName : 'MirandaCosgroveBot',
+    points : '9999999',
+    coins : '9999999',
+    hugs : '999999',
+    disciplines : '0',
+    purchases : ['slap'],
+    chats : '999999'
+}];
+
 let black_list = {users: [], songID: []};
 var session_playlist_id = ''; //Holds playlist ID for this session
 let VIDEO_ALLOWED;
@@ -151,8 +154,8 @@ function readUserData()
             //{
                 var temp = JSON.parse(viewerArr); 
                 for(var i = 0; i < temp.length; i++) {
-                    viewerObj[i] = temp[i];
-                    console.log(viewerObj[i]);
+                    userData[i].userName = temp[i];
+                    console.log(userData[i].userName);
                 }
             //}
         }
@@ -207,15 +210,20 @@ function exitListen()
         // with toString() and then trim()
         if(d.toString().trim() == "exit")
         {
-            /*
+            /**
             INSERT CODE TO STORE DATA YOU WANT TO KEEP BETWEEN SESSIONS HERE
             ALL FILE WRITES/READS SHOULD BE SYNCHRONIZED VERSION OR THEY WILL NOT COMPLETE CORRECTLY
             PLEASE LEAVE COMMENTS FOR WHAT IS BEING STORED TO DISK AT EXIT TIME
              */
 
-            /**
-             *Stores black_list data into JSON to be read into memory on next boot
-             */
+            let userOutput = JSON.stringify(userData, null, 2);
+            fs.writeFileSync('src/JSON/userData.json', userOutput, 'utf8', function (err){
+                if(err)
+                    console.log(err);
+                else
+                    console.log("SUCCESSFULLY STORED USERDATA");
+            });
+
             let data = JSON.stringify(black_list,  null, 2);
             fs.writeFileSync('src/JSON/blacklist.json', data, 'utf8', function (err) {
                 if (err){
@@ -271,37 +279,38 @@ function onMessageHandler (target, context, msg, self) {
     //console.log(viewer);
     
     var i = 0;
-    while (i <= viewerObj.length) {
-        if (viewerObj[i] == viewer) {
-            chatObj[i] += chats;
+    while (i <= userData.length) {
+        if (userData[i].userName === viewer) {
+            userData[i].chats += chats;
             console.log(viewer + " is already in array");
-            console.log(chatObj[i]);
             break;
         }
-        else if (i == viewerObj.length) {
-            viewerObj.push(viewer);
-            coinObj.push(0);
-            ptsObj.push(0);
-            chatObj.push(chats);
-            console.log(viewer + " has been added to array");
-            console.log(chatObj[i]);
+        else if (i === userData.length) {
+            userData.push({
+                userName : viewer,
+                points : 0,
+                coins : 0,
+                hugs : 0,
+                disciplines : 0,
+                purchases : []
+            });
             break;
         }
         i++;
     }
     // Split the message into individual words:
-    const parse = msg.slice(1).split(' ')
+    const parse = msg.slice(1).split(' ');
     // The command name is the first (0th) one:
-    const commandName = parse[0]
+    const commandName = parse[0];
     // The rest (if any) are the parameters:
-    const params = parse.splice(1)
+    const params = parse.splice(1);
 
     // If the command is known, let's execute it:
     if (commandName in knownCommands) {
         // Retrieve the function by its name:
-        const command = knownCommands[commandName]
+        const command = knownCommands[commandName];
         // Then call the command with parameters:
-        command(target, context, params)
+        command(target, context, params);
         console.log(`* Executed ${commandName} command for ${context.username}`)
     } else {
         console.log(`* Unknown command ${commandName} from ${context.username}`)
@@ -320,7 +329,7 @@ function onConnectedHandler (addr, port) {
 // Called every time the bot disconnects from Twitch:
 function onDisconnectedHandler (reason) {
     console.log(`Disconnected: ${reason}`);
-    process.exit(1)
+    process.exit(1);
 }
 
 // Function called when the "echo" command is issued:
@@ -359,24 +368,21 @@ function hug(target, context, huggee) {
     var hugCoins = 5;
 
     var i = 0;
-    while (i <= viewerObj.length) {
-        if (viewerObj[i] == viewer) {
-            hugsObj[i] += hugs;
+    while (i <= userData.length) {
+        if (userData[i].userName.toUpperCase() === huggee.toUpperCase()) {
+            userData[i].hugs += hugs;
             console.log(viewer + " is already in array");
-            console.log(hugsObj[i]);
             break;
         }
-        else if (i == viewerObj.length) {
-            viewerObj.push(viewer);
-            hugsObj.push(hugs);
-            console.log(viewer + " has been added to array");
-            console.log(hugsObj[i]);
+        else if (i === userData.length) {
+            console.log(huggee + " not found");
+            client.say(target, huggee + " is not loved enough to deserve a hug yet");
             break;
         }
         i++;
     }
 
-    sendMessage(target, context, context.username + ' has ' + ' been HUGGED!');
+    sendMessage(target, context, huggee + ' has ' + ' been HUGGED!');
 }
 
 
@@ -387,7 +393,7 @@ function showhugs(target, context) {
 
     var i = 0;
     while (i <= viewerObj.length) {
-        if (viewerObj[i] == viewer) {
+        if (userData[i].userName == viewer) {
             sendMessage(target, context, context.username + ' has ' + hugsObj[i] + ' total  hugs!');
             //console.log("viewer is in showpts array")
             break;
@@ -410,7 +416,7 @@ function discipline(target, context, disciplinee) {
 
     var i = 0;
     while (i <= viewerObj.length) {
-        if (viewerObj[i] == viewer) {
+        if (userData[i].userName == viewer) {
             discObj[i] += discs;
             hugsObj[i] -= discs;
             sendMessage(target, context, context.username + ' has ' + ' been disciplined!');
@@ -435,7 +441,7 @@ function showchats(target, context) {
 
     var i = 0;
     while (i <= viewerObj.length) {
-        if (viewerObj[i] == viewer) {
+        if (userData[i].userName == viewer) {
             sendMessage(target, context, context.username + ' has chatted ' + chatObj[i] + ' times!');
             console.log("viewer is in hugs array")
             break;
@@ -457,7 +463,7 @@ function gamble(target, context, params) {
 
     var i = 0;
     while (i <= viewerObj.length) {
-        if (viewerObj[i] == viewer) {
+        if (userData[i].userName == viewer) {
             console.log("user is already in array")
             if (params.length)
                 var msg = params.join(' ');
@@ -586,7 +592,7 @@ function givepts(target, context) {
 
     var i = 0;
     while (i <= viewerObj.length) {
-        if (viewerObj[i] == viewer) {
+        if (userData[i].userName == viewer) {
             ptsObj[i] += pts;
             console.log(viewer + " is already in array");
             console.log(ptsObj[i]);
@@ -613,7 +619,7 @@ function showpts(target, context) {
 
     var i = 0;
     while (i <= viewerObj.length) {
-        if (viewerObj[i] == viewer) {
+        if (userData[i].userName == viewer) {
             sendMessage(target, context, context.username + ' has ' + ptsObj[i] + ' total  points!');
             console.log("viewer is in showpts array")
             break;
@@ -634,7 +640,7 @@ function trade(target, context) {
 
     var i = 0;
     while (i <= viewerObj.length) {
-        if (viewerObj[i] == viewer) {
+        if (userData[i].userName == viewer) {
             while(ptsObj[i] >= 10) {
                 if(ptsObj[i] >= 100) {
                     ptsObj[i] -= 100;
@@ -730,7 +736,7 @@ function requestsong(target, context, videoID) {
     var viewer = context.username;
     var i = 0;
     while (i <= viewerObj.length) {
-        if (viewerObj[i] == viewer) {
+        if (userData[i].userName == viewer) {
             if(coinObj[i] >= 5) {
                 if(VIDEO_ALLOWED === true) {
                     if(session_playlist_id == '')
@@ -1286,7 +1292,7 @@ function buyCommand(target, context, commandToBuy)
 
         var i = 0;
         while (i <= viewerObj.length)
-            if (viewerObj[i] === viewer){
+            if (userData[i].userName === viewer){
                 if(coinObj[i] >= 5) {
                     coinObj[i] -= 5;
                     client.say(target, "WOW! You bought the " + commandToBuy + " command. Are you happy with yourself now?");
