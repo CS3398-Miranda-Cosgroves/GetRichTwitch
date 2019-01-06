@@ -1,3 +1,8 @@
+/*
+TO DO LIST (Michael): Rebuild slap and discipline commands. Java GUI settings menu
+ */
+
+
 const tmi = require('tmi.js');
 const haikudos = require('haikudos');
 const getVideoId = require('get-video-id');
@@ -11,15 +16,7 @@ let datetime = new Date();
 
 //channel variables
 let currUsers = [ 'MirandaCosgroveBot' ];
-let userData = [{
-    userName : 'MirandaCosgroveBot',
-    points : '9999999',
-    coins : '9999999',
-    hugs : '999999',
-    disciplines : '0',
-    purchases : ['slap'],
-    chats : '999999'
-}];
+let userData = [];
 
 let black_list = {users: [], songID: []};
 var session_playlist_id = ''; //Holds playlist ID for this session
@@ -65,6 +62,21 @@ function connectIRC(){
 
 function readUserData()
 {
+    //Read user viewer data into memory
+    fs.readFile("src/JSON/userData.json", 'utf8', function (err, data) {
+        if (err)
+        {
+            console.log("ERROR READING BLACKLIST - REMOVING CURRENT LIST")
+        }
+        else{
+            if(!(Object.keys(data).length === 0))
+            {
+                userData = JSON.parse(data);
+            }
+            console.log(userData);
+        }
+    });
+
     //Read song blacklist into memory
     fs.readFile("src/JSON/blacklist.json", 'utf8', function (err, data) {
         if (err)
@@ -142,60 +154,7 @@ function readUserData()
             }
         }
     });
-    
-    //viewerObj
-    fs.readFile("src/JSON/viewerArr.json", 'utf8', function (err, viewerArr) {
-        if (err)
-        {
-            console.log("ERROR READING VIEWER ARRAY - REMOVING CURRENT LIST")
-        }
-        else{
-           // if(!(Object.keys(viewerArr).length === 0))
-            //{
-                var temp = JSON.parse(viewerArr); 
-                for(var i = 0; i < temp.length; i++) {
-                    userData[i].userName = temp[i];
-                    console.log(userData[i].userName);
-                }
-            //}
-        }
-    });
 
-    //ptsObj
-    fs.readFile("src/JSON/ptsArr.json", 'utf8', function (err, ptsArr) {
-        if (err)
-        {
-            console.log("ERROR READING PTS ARRAY - REMOVING CURRENT LIST")
-        }
-        else{
-           // if(!(Object.keys(ptsArr).length === 0))
-            //{ 
-                temp = JSON.parse(ptsArr);
-                for(var i = 0; i < temp.length; i++) {
-                    ptsObj[i] = temp[i];
-                    console.log(ptsObj[i]);
-                }
-            //}
-        }
-    });
-
-    //coinObj
-    fs.readFile("src/JSON/coinArr.json", 'utf8', function (err, coinArr) {
-        if (err)
-        {
-            console.log("ERROR READING VIEWER ARRAY - REMOVING CURRENT LIST")
-        }
-        else{
-            //if(!(Object.keys(coinArr).length === 0))
-            //{ 
-                temp = JSON.parse(coinArr);
-                for(var i = 0; i < temp.length; i++) {
-                    coinObj[i] = temp[i];
-                    console.log(coinObj[i]);
-                }
-            //}
-        }
-    });
 
 
 
@@ -232,33 +191,6 @@ function exitListen()
                 console.log('BLACKLIST STORED TO DISK');
             });
 
-            //viewObj
-            let viewerArr = JSON.stringify(viewerObj, null, 2);
-            fs.writeFileSync('src/JSON/viewerArr.json', viewerArr, 'utf8', function (err) {
-                if (err){
-                    console.log("ERROR STORING VIEWER ARRAY TO FILE");
-                }
-                console.log('VIEWEROBJ STORED TO DISK');
-            });
-
-            //ptsObj
-            let ptsArr = JSON.stringify(ptsObj,  null, 2);
-            fs.writeFileSync('src/JSON/ptsArr.json', ptsArr, 'utf8', function (err) {
-                if (err){
-                    console.log("ERROR STORING PTS ARRAY TO FILE");
-                }
-                console.log('PTSOBJ STORED TO DISK');
-            });
-
-            //coinObj
-            let coinArr = JSON.stringify(coinObj,  null, 2);
-            fs.writeFileSync('src/JSON/coinArr.json', coinArr, 'utf8', function (err) {
-                if (err){
-                    console.log("ERROR STORING COIN ARRAY TO FILE");
-                }
-                console.log('COINOBJ STORED TO DISK');
-            });
-
             process.exit();
         }
     });
@@ -279,25 +211,23 @@ function onMessageHandler (target, context, msg, self) {
     //console.log(viewer);
     
     var i = 0;
-    while (i <= userData.length) {
-        if (userData[i].userName === viewer) {
+    while (i < userData.length) {
+        if (userData[i].userName == viewer) {
             userData[i].chats += chats;
             console.log(viewer + " is already in array");
             break;
         }
-        else if (i === userData.length) {
-            userData.push({
-                userName : viewer,
-                points : 0,
-                coins : 0,
-                hugs : 0,
-                disciplines : 0,
-                purchases : []
-            });
-            break;
-        }
+
         i++;
     }
+    userData.push({
+        userName : viewer,
+        points : 0,
+        coins : 0,
+        hugs : 0,
+        disciplines : 0,
+        purchases : []});
+
     // Split the message into individual words:
     const parse = msg.slice(1).split(' ');
     // The command name is the first (0th) one:
@@ -317,7 +247,7 @@ function onMessageHandler (target, context, msg, self) {
     }
 }
 
-function onSubHandler () {
+function onSubHandler() {
     console.log(`/*/*/*/*/*Subscriber has been detected/*/*/*/*/*`)
 }
 
@@ -362,27 +292,33 @@ function haiku (target, context) {
 // Function called when the "hug" command is issued:
 //Function created by Eric Ross
 function hug(target, context, huggee) {
+    if(huggee.length < 1)
+    {
+        client.say(target, context.username + " You must enter a user to hug in this command.");
+    }
     var viewer = context.username;
     //console.log(viewer);
     var hugs = 1;
-    var hugCoins = 5;
 
     var i = 0;
-    while (i <= userData.length) {
+    while (i < userData.length) {
         if (userData[i].userName.toUpperCase() === huggee.toUpperCase()) {
             userData[i].hugs += hugs;
             console.log(viewer + " is already in array");
-            break;
-        }
-        else if (i === userData.length) {
-            console.log(huggee + " not found");
-            client.say(target, huggee + " is not loved enough to deserve a hug yet");
-            break;
+            sendMessage(target, context, huggee + ' has ' + ' been HUGGED!');
+            return;
         }
         i++;
     }
+    userData.push({
+        userName : viewer,
+        points : 0,
+        coins : 0,
+        hugs : 0,
+        disciplines : 0,
+        purchases : []});
+    console.log(huggee + " not found");
 
-    sendMessage(target, context, huggee + ' has ' + ' been HUGGED!');
 }
 
 
@@ -392,13 +328,13 @@ function showhugs(target, context) {
     var viewer = context.username;
 
     var i = 0;
-    while (i <= viewerObj.length) {
+    while (i < userData.length) {
         if (userData[i].userName == viewer) {
-            sendMessage(target, context, context.username + ' has ' + hugsObj[i] + ' total  hugs!');
+            sendMessage(target, context, context.username + ' has ' + userData[i].hugs + ' total  hugs!');
             //console.log("viewer is in showpts array")
             break;
         }
-        else if (i == viewerObj.length) {
+        else if (i == userData.length) {
             console.log(viewer + " is not in array");
             sendMessage(target, context, context.username + ' has no hugs!');
             break;
@@ -410,27 +346,7 @@ function showhugs(target, context) {
 //Function called when the "discipline command is issued:
 //Function created by Eric Ross
 function discipline(target, context, disciplinee) {
-    var viewer = context.username;
-    //console.log(viewer);
-    var discs = 1;
 
-    var i = 0;
-    while (i <= viewerObj.length) {
-        if (userData[i].userName == viewer) {
-            discObj[i] += discs;
-            hugsObj[i] -= discs;
-            sendMessage(target, context, context.username + ' has ' + ' been disciplined!');
-            console.log(viewer + " is already in array");
-            console.log(discObj[i]);
-            break;
-        }
-        else if (i == viewerObj.length) {
-            console.log(viewer + " is not in array");
-            sendMessage(target, context, context.username + ' was given a stern talking to.');
-            break;
-        }
-        i++;
-    }
 }
 
 
@@ -440,13 +356,13 @@ function showchats(target, context) {
     var viewer = context.username;
 
     var i = 0;
-    while (i <= viewerObj.length) {
+    while (i < userData.length) {
         if (userData[i].userName == viewer) {
-            sendMessage(target, context, context.username + ' has chatted ' + chatObj[i] + ' times!');
+            sendMessage(target, context, context.username + ' has chatted ' + userData[i].chats + ' times!');
             console.log("viewer is in hugs array")
             break;
         }
-        else if (i == viewerObj.length) {
+        else if (i == userData.length) {
             console.log(viewer + " is not in array");
             sendMessage(target, context, context.username + ' has not chatted!');
             break;
@@ -462,7 +378,7 @@ function gamble(target, context, params) {
     var viewer = context.username;
 
     var i = 0;
-    while (i <= viewerObj.length) {
+    while (i < userData.length) {
         if (userData[i].userName == viewer) {
             console.log("user is already in array")
             if (params.length)
@@ -473,8 +389,8 @@ function gamble(target, context, params) {
             else
                 coin = 'heads';
 
-            if (coinObj[i] >= 10) {
-                coinObj[i] -= 10;
+            if (userData[i].coins >= 10) {
+                userData[i].coins -= 10;
 
                 // Prints gamble messages;
                 if (msg != 'tails' && msg != 'heads') {
@@ -483,11 +399,11 @@ function gamble(target, context, params) {
                 }
                 else if (coin == 'tails' && coin == msg) {
                     sendMessage(target, context, 'You bet on Tails and you won the bet (somehow). You won 20 coins');
-                    coinObj[i] += 30;
+                    userData[i].coins += 30;
                 }
                 else if (coin == 'heads' && coin == msg) {
                     sendMessage(target, context, 'You bet on Heads and you won the bet (somehow). You won 20 coins');
-                    coinObj[i] += 30;
+                    userData[i].coins += 30;
                 }
                 else if (coin == 'tails' && coin != msg) {
                     sendMessage(target, context, 'You bet on Heads and you lost the bet. You lost 10 coins..boohoo');
@@ -496,16 +412,21 @@ function gamble(target, context, params) {
                     sendMessage(target, context, 'You bet on Tails and you lost the bet. You lost 10 coins..boohoo');
                 }
             }
-            else if (coinObj[i] < 10) {
+            else if (userData[i].coins < 10) {
                 sendMessage(target, context, 'You need at least 10 coins to gamble with.')
             }
 
             break;
         }
-        else if (i == viewerObj.length) {
-            viewerObj.push(viewer);
-            ptsObj.push(0);
-            coinObj.push(0);
+        else if (i == userData.length) {
+            userData.push({
+                userName : viewer,
+                points : 0,
+                coins : 0,
+                hugs : 0,
+                disciplines : 0,
+                purchases : []
+            });
             sendMessage(target, context, 'You have no coins to gamble, try using !givepts first.')
             console.log("user has been added to array")
             break;
@@ -529,45 +450,7 @@ function coinflip(target, context) {
 // Function called when the "slap" command is issued:
 // Function created by lts25
 function slap(target, context, slapee) {
-    var inArray = false;
 
-    for(x = 0; x < slapPermObj.length; x++){
-        if(context['user-id'] == slapPermObj[x]){
-            var inChat = 1;
-            var i;
-            inArray = true;
-            x = slapPermObj.length;
-
-            currUsers.push(context.username);
-            //console.log(currUsers);
-
-            if (slapee != "") {
-                inChat = 0
-                for (i = 0; i < currUsers.length; i++){
-                    if (currUsers[i] == slapee) {
-                        inChat = 1;
-                        break;
-                    }
-                }
-                if (inChat){
-                    client.say(target, "@" + slapee + ", YOU HAVE BEEN SLAPPED!");
-                }
-                else {
-                    client.say(target, "user not in slapable.");
-                }
-            }
-            else {
-                var numPersons = currUsers.length;
-                var person = Math.floor(Math.random() * numPersons);
-
-                var slapee = currUsers[person];
-                client.say(target, "@" + slapee + ", YOU HAVE BEEN SLAPPED!");
-            }
-        }
-    }
-
-    if(!inArray)
-        client.say(target, "You have not bought this command yet. GIVE US YOUR COINS!!");
 }
 
 //Function called when the "doom" command is issued:
@@ -591,19 +474,22 @@ function givepts(target, context) {
     var pts = Math.floor((Math.random()+1 ) * 100);
 
     var i = 0;
-    while (i <= viewerObj.length) {
+    while (i < userData.length) {
         if (userData[i].userName == viewer) {
-            ptsObj[i] += pts;
+            userData[i].points += pts;
             console.log(viewer + " is already in array");
-            console.log(ptsObj[i]);
+            console.log(userData[i]);
             break;
         }
-        else if (i == viewerObj.length) {
-            viewerObj.push(viewer);
-            ptsObj.push(pts);
-            coinObj.push(0);
-            console.log(viewer + " has been added to array");
-            console.log(ptsObj[i]);
+        else if (i == userData.length) {
+            userData.push({
+                userName : viewer,
+                points : 0,
+                coins : 0,
+                hugs : 0,
+                disciplines : 0,
+                purchases : []
+            });
             break;
         }
         i++;
@@ -618,19 +504,25 @@ function showpts(target, context) {
     var viewer = context.username;
 
     var i = 0;
-    while (i <= viewerObj.length) {
+    while (i < userData.length) {
         if (userData[i].userName == viewer) {
-            sendMessage(target, context, context.username + ' has ' + ptsObj[i] + ' total  points!');
-            console.log("viewer is in showpts array")
-            break;
-        }
-        else if (i == viewerObj.length) {
-            console.log(viewer + " is not in array");
-            sendMessage(target, context, context.username + ' has no points!');
-            break;
+            sendMessage(target, context, context.username + ' has ' + userData[i].points + ' total  points!');
+            console.log("viewer is in showpts array");
+            return;
         }
         i++;
     }
+    console.log(viewer + " is not in array");
+    sendMessage(target, context, context.username + ' has no points!');
+    userData.push({
+        userName : viewer,
+        points : 0,
+        coins : 0,
+        hugs : 0,
+        disciplines : 0,
+        purchases : []
+    });
+
 }
 
 //Function called when "trade" command is issued:
@@ -639,30 +531,35 @@ function trade(target, context) {
     var viewer = context.username;
 
     var i = 0;
-    while (i <= viewerObj.length) {
+    while (i < userData.length) {
         if (userData[i].userName == viewer) {
-            while(ptsObj[i] >= 10) {
-                if(ptsObj[i] >= 100) {
-                    ptsObj[i] -= 100;
-                    coinObj[i] += 10;
+            while(userData[i].points >= 10) {
+                if(userData[i].points >= 100) {
+                    userData[i].points -= 100;
+                    userData[i].coins += 10;
                 }
-                else if(ptsObj[i] >= 50) {
-                    ptsObj[i] -= 50;
-                    coinObj[i] += 5;
+                else if(userData[i].points >= 50) {
+                    userData[i].points -= 50;
+                    userData[i].coins += 5;
                 }
-                else if(ptsObj[i] >= 10) {
-                    ptsObj[i] -= 10;
-                    coinObj[i] += 1;
+                else if(userData[i].points >= 10) {
+                    userData[i].points -= 10;
+                    userData[i].coins += 1;
                 }
             }
-            sendMessage(target, context, context.username + ' has ' + ptsObj[i] + ' total  points and ' + coinObj[i] + ' total coins now!');
+            sendMessage(target, context, context.username + ' has ' + userData[i].points + ' total  points and ' + userData[i].coins + ' total coins now!');
             break;
         }
-        else if (i == viewerObj.length) {
+        else if (i == userData.length) {
             console.log(viewer + " is not in array");
-            viewerObj.push(viewer);
-            ptsObj.push(0);
-            coinObj.push(0);
+            userData.push({
+                userName : viewer,
+                points : 0,
+                coins : 0,
+                hugs : 0,
+                disciplines : 0,
+                purchases : []
+            });
             sendMessage(target, context, context.username + ' has no points!');
             break;
         }
@@ -735,25 +632,22 @@ function commands(target, context)
 function requestsong(target, context, videoID) {
     var viewer = context.username;
     var i = 0;
-    while (i <= viewerObj.length) {
-        if (userData[i].userName == viewer) {
-            if(coinObj[i] >= 5) {
-                if(VIDEO_ALLOWED === true) {
-                    if(session_playlist_id == '')
-                    {
-                        fs.readFile('src/JSON/most_recent_playlist.json', function (err, data)
-                        {
-                            if (err)
-                            {//If you get an error on the read, create a new playlist and overwrite previous file
-                                console.log(err + "\nError fetching playlist, discarding data in most_recent_playlist.json");
-                                fs.readFile('src/JSON/client_secret.json', function processClientSecrets(err, content) {
-                                    if (err) {
-                                        console.log('Error loading client secret file: ' + err);
-                                        return;
-                                    }
-                                    console.log("Playlist does not exist, creating new playlist");
-                                    // Authorize a client with the loaded credentials, then call the YouTube API to create a playlist
-                                    authorize(JSON.parse(content), {
+    if(VIDEO_ALLOWED === true) {
+        if(session_playlist_id == '') //If playlist ID is empty, create new playlist to enter playlist item
+        {
+            fs.readFile('src/JSON/most_recent_playlist.json', function (err, data)
+            {
+                if (err)
+                {//If you get an error on the read, create a new playlist and overwrite previous file
+                    console.log(err + "\nError fetching playlist, discarding data in most_recent_playlist.json");
+                    fs.readFile('src/JSON/client_secret.json', function processClientSecrets(err, content) {
+                        if (err) {
+                            console.log('Error loading client secret file: ' + err);
+                            return;
+                        }
+                        console.log("Playlist does not exist, creating new playlist");
+                        // Authorize a client with the loaded credentials, then call the YouTube API to create a playlist
+                        authorize(JSON.parse(content), {
                                         'params': {
                                             'part': 'snippet,status',
                                             'onBehalfOfContentOwner': ''
@@ -767,28 +661,28 @@ function requestsong(target, context, videoID) {
                                     }, playlistsInsert);
                                 });
                                 return;
-                            }
-                            //Otherwise check time to see if a recent playlist exists, otherwise create a new one and overwrite file
-                            data = (data.toString()).split(' ');
-                            let time_created = parseInt(data[1], 10);
-                            let last_ID = data[0];
-                            let current_time = datetime.getTime();
-                            console.log(last_ID);
-                            if ((current_time - time_created) < 86700000)
-                            {
-                                console.log("Playlist from within 24 hours found, grabbing playlist ID: " + last_ID);
-                                session_playlist_id = last_ID;
-                            }
-                            else{
-                                console.log("Playlist does not exist, creating new playlist");
-                                // Authorize a client with the loaded credentials, then call the YouTube API to create a playlist
-                                fs.readFile('src/JSON/client_secret.json', function processClientSecrets(err, content) {
-                                    if (err) {
-                                        console.log('Error loading client secret file: ' + err);
-                                        return;
-                                    }
-                                    authorize(JSON.parse(content), {
-                                        'params': {
+                }
+                //Otherwise check time to see if a recent playlist exists, otherwise create a new one and overwrite file
+                data = (data.toString()).split(' ');
+                let time_created = parseInt(data[1], 10);
+                let last_ID = data[0];
+                let current_time = datetime.getTime();
+                console.log(last_ID);
+                if ((current_time - time_created) < 86700000) //recent playlist exists, do not create new one to avoid playlist pollution
+                {//86700000 is 24hrs, change to fit your needs, playlists can be added to for an indefinite amount of time
+                    console.log("Playlist from within 24 hours found, grabbing playlist ID: " + last_ID);
+                    session_playlist_id = last_ID;
+                }
+                else{ //No recent one found, make a new playlist
+                    console.log("Playlist does not exist, creating new playlist");
+                    // Authorize a client with the loaded credentials, then call the YouTube API to create a playlist
+                    fs.readFile('src/JSON/client_secret.json', function processClientSecrets(err, content) {
+                        if (err) {
+                            console.log('Error loading client secret file: ' + err);
+                            return;
+                        }
+                        authorize(JSON.parse(content), {
+                                'params': {
                                             'part': 'snippet,status',
                                             'onBehalfOfContentOwner': ''
                                         }, 'properties': {
@@ -802,48 +696,30 @@ function requestsong(target, context, videoID) {
                                 });
                             }
                         });
-                    }
-                    let ID = getVideoId(videoID.toString());
-                    console.log(ID);
-                    if(checkBlacklist(context.username) || checkBlacklist(ID['id']))
-                    {
-                        client.say(target, "@" + context.username + " song or viewer has been blocked from song requests");
-                        return;
-                    }
-                    if(Object.keys(ID).length === 0 && ID.constructor === Object) {
-                        client.say(target, "@" + context.username + " That ID is not a valid youtube URL")
-                    }
-                    else {
-                        let requestinfo = {SongID: ID, Name: context['username'], UserID: context['user-id']};
-                        let data = JSON.stringify(requestinfo, null, 2);
-                        fs.writeFile('src/JSON/song-request-update.json', data, 'utf8', function (err) {
-                            if (err) throw err;
-                            console.log('complete');
-                        });
-                        console.log("Playlist ID: " + session_playlist_id);
-                        playlistItemInsertNow(ID['id'], target);
-                        coinObj[i] -= 5;
-                    }
-                }
-                else {
-                    client.say(target, "Song requests are not currently allowed, get a moderator to use !allowrequests");
-                }
-
-            }
-            else {
-                sendMessage(target, context, context.username + ' has no coins to spend on fancy things!');
-            }
-            break;
         }
-        else if (i == viewerObj.length) {
-            console.log(viewer + " is not in array");
-            viewerObj.push(viewer);
-            ptsObj.push(0);
-            coinObj.push(0);
-            sendMessage(target, context, context.username + ' needs to get points first!');
-            break;
+        let ID = getVideoId(videoID.toString());
+        console.log(ID);
+        if(checkBlacklist(context.username) || checkBlacklist(ID['id']))
+        {
+            client.say(target, "@" + context.username + " song or viewer has been blocked from song requests");
+            return;
         }
-        i++;
+        if(Object.keys(ID).length === 0 && ID.constructor === Object) {
+            client.say(target, "@" + context.username + " That ID is not a valid youtube URL")
+        }
+        else {
+            let requestinfo = {SongID: ID, Name: context['username'], UserID: context['user-id']};
+            let data = JSON.stringify(requestinfo, null, 2);
+            fs.writeFile('src/JSON/song-request-update.json', data, 'utf8', function (err) {
+                if (err) throw err;
+                console.log('complete');
+            });
+            console.log("Playlist ID: " + session_playlist_id);
+            playlistItemInsertNow(ID['id'], target);
+        }
+    }
+    else {
+        client.say(target, "Song requests are not currently allowed, get a moderator to use !allowrequests");
     }
 }
 
@@ -856,7 +732,7 @@ function allowrequests(target, context)
     let badge = context['badges-raw'].split(",")[0];
     if(context['mod'] === true || badge === "broadcaster/1")
     {
-        if(session_playlist_id == '')
+        if(session_playlist_id == '') //If playlist ID is empty, create a new playlist
         {
             fs.readFile('src/JSON/most_recent_playlist.json', function (err, data)
             {
@@ -982,7 +858,7 @@ function playlistsInsert(auth, requestData) {
 
 
 /**
- * Create an OAuth2 client with the given credentials, and then execute the
+ * Create an OAuth2 approval with the given credentials, and then execute the
  * given callback function.
  */
 function authorize(credentials, requestData, callback) {
@@ -1010,7 +886,7 @@ function getNewToken(oauth2Client) {
     var authUrl = oauth2Client.generateAuthUrl({
         access_type: 'offline',
         scope: SCOPES
-    });
+    });t
     console.log('Authorize this app by visiting this url: ', authUrl);
     var rl = readline.createInterface({
         input: process.stdin,
@@ -1093,11 +969,14 @@ function createResource(properties) {
 }
 
 function stats(target, context) {
-    client.say(target, context['display-name'] + " Here's your status")
+    client.say(target, context['display-name'] + " Here's your status");
     if (context['mod'] === true) {
         client.say(target, context['display-name'] + " is a mod")
     }
-    client.say(target, "Your badges are: " + context['badges-raw']);
+    else
+    {
+        client.say(target, context['display-name'] + " is not a mod")
+    }
 }
 
 /**
@@ -1221,6 +1100,7 @@ function blacklist(target, context, parameters)
     }
 }
 
+//Checks for blacklist entry in users and song ID
 function checkBlacklist(name)
 {
     for(let i in black_list.users)
@@ -1291,19 +1171,24 @@ function buyCommand(target, context, commandToBuy)
         var viewer = context.username;
 
         var i = 0;
-        while (i <= viewerObj.length)
+        while (i < userData.length)
             if (userData[i].userName === viewer){
-                if(coinObj[i] >= 5) {
-                    coinObj[i] -= 5;
+                if(userData.coins >= 5) {
+                    userData.coins -= 5;
                     client.say(target, "WOW! You bought the " + commandToBuy + " command. Are you happy with yourself now?");
                     givePermission(target, context, commandToBuy);
                     break;
                 }
             }
             else {
-                viewerObj.push(viewer);
-                coinObj.push(0);
-                ptsObj.push(0);
+                userData.push({
+                    userName : viewer,
+                    points : 0,
+                    coins : 0,
+                    hugs : 0,
+                    disciplines : 0,
+                    purchases : []
+                });
                 client.say(target, "Haha you don't have enough coins to buy that command x)")
                 break;
             }
