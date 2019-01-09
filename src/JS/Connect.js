@@ -1,5 +1,9 @@
 /*
-TO DO LIST (Michael): Rebuild slap and discipline commands. Java GUI settings menu
+TO DO LIST (Michael):   Rebuild slap and discipline commands to work with new data structures
+                        Make givepts targeted and mod only
+                        Add new features to subscription event handler
+                        Rebuild function shop purchases to update for new data structures
+                        Java GUI settings menu
  */
 
 
@@ -200,7 +204,6 @@ function exitListen()
 function onMessageHandler (target, context, msg, self) {
     if (self) { return } // Ignore messages from the bot
     console.log("message type: " + context['message-type']);
-    var chats = 1;
     // This isn't a command since it has no prefix:
     if (msg.substr(0, 1) !== commandPrefix) {
         console.log(`[${target} (${context['message-type']})] ${context.username}: ${msg}`)
@@ -211,22 +214,28 @@ function onMessageHandler (target, context, msg, self) {
     //console.log(viewer);
     
     var i = 0;
+    let not_found = true;
     while (i < userData.length) {
         if (userData[i].userName == viewer) {
-            userData[i].chats += chats;
+            userData[i].chats += 1;
+            userData[i].points += 1;
             console.log(viewer + " is already in array");
+            not_found = false;
             break;
         }
-
         i++;
     }
-    userData.push({
-        userName : viewer,
-        points : 0,
-        coins : 0,
-        hugs : 0,
-        disciplines : 0,
-        purchases : []});
+    if(not_found) {
+        userData.push({
+            userName: viewer,
+            points: 1,
+            coins: 0,
+            hugs: 0,
+            disciplines: 0,
+            purchases: [],
+            chats: 1
+        });
+    }
 
     // Split the message into individual words:
     const parse = msg.slice(1).split(' ');
@@ -310,13 +319,6 @@ function hug(target, context, huggee) {
         }
         i++;
     }
-    userData.push({
-        userName : viewer,
-        points : 0,
-        coins : 0,
-        hugs : 0,
-        disciplines : 0,
-        purchases : []});
     console.log(huggee + " not found");
 
 }
@@ -418,19 +420,6 @@ function gamble(target, context, params) {
 
             break;
         }
-        else if (i == userData.length) {
-            userData.push({
-                userName : viewer,
-                points : 0,
-                coins : 0,
-                hugs : 0,
-                disciplines : 0,
-                purchases : []
-            });
-            sendMessage(target, context, 'You have no coins to gamble, try using !givepts first.')
-            console.log("user has been added to array")
-            break;
-        }
         i++;
     }
 }
@@ -481,17 +470,6 @@ function givepts(target, context) {
             console.log(userData[i]);
             break;
         }
-        else if (i == userData.length) {
-            userData.push({
-                userName : viewer,
-                points : 0,
-                coins : 0,
-                hugs : 0,
-                disciplines : 0,
-                purchases : []
-            });
-            break;
-        }
         i++;
     }
 
@@ -514,14 +492,6 @@ function showpts(target, context) {
     }
     console.log(viewer + " is not in array");
     sendMessage(target, context, context.username + ' has no points!');
-    userData.push({
-        userName : viewer,
-        points : 0,
-        coins : 0,
-        hugs : 0,
-        disciplines : 0,
-        purchases : []
-    });
 
 }
 
@@ -552,14 +522,6 @@ function trade(target, context) {
         }
         else if (i == userData.length) {
             console.log(viewer + " is not in array");
-            userData.push({
-                userName : viewer,
-                points : 0,
-                coins : 0,
-                hugs : 0,
-                disciplines : 0,
-                purchases : []
-            });
             sendMessage(target, context, context.username + ' has no points!');
             break;
         }
@@ -1171,27 +1133,21 @@ function buyCommand(target, context, commandToBuy)
         var viewer = context.username;
 
         var i = 0;
-        while (i < userData.length)
-            if (userData[i].userName === viewer){
-                if(userData.coins >= 5) {
+        while(i < userData.length) {
+            if (userData[i].userName === viewer) {
+                if (userData.coins >= 5) {
                     userData.coins -= 5;
                     client.say(target, "WOW! You bought the " + commandToBuy + " command. Are you happy with yourself now?");
                     givePermission(target, context, commandToBuy);
                     break;
                 }
+                else {
+                    client.say(target, "Haha you don't have enough coins to buy that command ya dingus)")
+                    break;
+                }
             }
-            else {
-                userData.push({
-                    userName : viewer,
-                    points : 0,
-                    coins : 0,
-                    hugs : 0,
-                    disciplines : 0,
-                    purchases : []
-                });
-                client.say(target, "Haha you don't have enough coins to buy that command x)")
-                break;
-            }
+            i++;
+        }
     }
     else
         client.say(target, "You did not enter a correct command name. Use !shopMenu to see them available commands.")
@@ -1199,7 +1155,5 @@ function buyCommand(target, context, commandToBuy)
 
 function givePermission(target, context, commandToBuy)
 {
-    if(commandToBuy == "slap")
-        slapPermObj.push(context['user-id']);
-    /** ADD REST OF COMMANDS THAT CAN BE BOUGHT*/
+
 }
